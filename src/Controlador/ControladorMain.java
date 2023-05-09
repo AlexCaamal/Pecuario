@@ -161,7 +161,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                     + "INNER JOIN mortalidad mo on re.id_registro = mo.id_registro "
                     + "INNER JOIN alimentos ali on re.id_registro = ali.id_registro "
                     + "INNER JOIN produccion pro on re.id_registro = pro.id_registro "
-                    + "WHERE re.fecha= '08/05/2023'";
+                    + "WHERE re.fecha= " + fecha;
 
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -187,6 +187,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 mn.txt_promedioINC.setText(rs.getString("promedioInc"));
                 mn.txt_comercio.setText(rs.getString("comercio"));
                 mn.txt_roto.setText(rs.getString("roto"));
+
             }
             rs.close();
             con.close();
