@@ -48,6 +48,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         mn.txt_INC.addKeyListener(this);
         mn.tb_main.addMouseListener(this);
         cargarDatosMain();
+        cargarDatosTxtField();
     }
     
     
@@ -151,31 +152,41 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         try {
             Connection con = conexion.establecerConnection();
             String sql = "SELECT re.id_registro, re.fecha, ex.edad, ex.CantHembras, ex.CanMachos, "
-                    + "mo.diaHembra, mo.diaMachos, ali.kgHembras, ali.kgMachos "
+                    + "mo.diaHembra, mo.promedioHembra,mo.selHembra, mo.ventasHembras, mo.diaMachos, "
+                    + "mo.promedioMachos, mo.selMachos, mo.ventasMachos, ali.kgHembras, ali.grsHembras, "
+                    + "ali.kgMachos, ali.grsMachos, pro.totalHuevos, pro.promedioTotal, pro.incubable, pro.promedioInc, "
+                    + "pro.comercio, pro.roto "
                     + "FROM registros re "
                     + "INNER JOIN  existencia ex on re.id_registro = ex.id_registro "
                     + "INNER JOIN mortalidad mo on re.id_registro = mo.id_registro "
                     + "INNER JOIN alimentos ali on re.id_registro = ali.id_registro "
                     + "INNER JOIN produccion pro on re.id_registro = pro.id_registro "
-                    + "WHERE re.fecha= " + fecha;
+                    + "WHERE re.fecha= '08/05/2023'";
 
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                mn.txt_fecha.setText(rs.getString("id_registro"));
-                mn.txt_fecha.setText(rs.getString("edad"));
-                mn.txt_fecha.setText(rs.getString("CantHembras"));
-                mn.txt_fecha.setText(rs.getString("CanMachos"));
+                mn.LB_ID.setText(rs.getString("id_registro"));
                 mn.txt_fecha.setText(rs.getString("fecha"));
-                mn.txt_fecha.setText(rs.getString("fecha"));
-                mn.txt_fecha.setText(rs.getString("fecha"));
-                mn.txt_fecha.setText(rs.getString("fecha"));
-                mn.txt_fecha.setText(rs.getString("fecha"));
-                mn.txt_fecha.setText(rs.getString("fecha"));
-                mn.txt_fecha.setText(rs.getString("fecha"));
-                mn.txt_fecha.setText(rs.getString("fecha"));
-                mn.txt_fecha.setText(rs.getString("fecha"));
-                
+                mn.txtEdad.setText(rs.getString("edad"));
+                mn.txt_cantHembras.setText(rs.getString("CantHembras"));
+                mn.txt_canMachos.setText(rs.getString("CanMachos"));
+                mn.txt_diaHembra.setText(rs.getString("diaHembra"));
+                mn.txt_promedioHembra.setText(rs.getString("promedioHembra"));
+                mn.txt_selHembra.setText(rs.getString("selHembra"));
+                mn.txt_vetntasHembra.setText(rs.getString("ventasHembras"));
+                mn.txt_diaMacho.setText(rs.getString("diaMachos"));
+                mn.txt_promedioMacho.setText(rs.getString("promedioMachos"));
+                mn.txt_selMacho.setText(rs.getString("selMachos"));
+                mn.txt_ventasMachos.setText(rs.getString("ventasMachos"));
+                mn.txt_kgMacho.setText(rs.getString("kgMachos"));
+                mn.txt_grsMacho.setText(rs.getString("grsMachos"));
+                mn.txt_total1.setText(rs.getString("totalHuevos"));
+                mn.txt_promedioTotal1.setText(rs.getString("promedioTotal"));
+                mn.txt_INC.setText(rs.getString("incubable"));
+                mn.txt_promedioINC.setText(rs.getString("promedioInc"));
+                mn.txt_comercio.setText(rs.getString("comercio"));
+                mn.txt_roto.setText(rs.getString("roto"));
             }
             rs.close();
             con.close();
