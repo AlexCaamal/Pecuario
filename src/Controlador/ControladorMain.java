@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import view.main;
 
@@ -24,7 +25,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
 
     main mn;
      LocalDateTime dia = LocalDateTime.now();
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yy");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String fecha = dia.format(formato);
 
     public ControladorMain(main mn) {
@@ -49,6 +50,9 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         mn.tb_main.addMouseListener(this);
         cargarDatosMain();
         cargarDatosTxtField();
+        calcularPromedioTotal();
+        calcularPromedioINC();
+        calcularTotalHuevos();
     }
     
     
@@ -95,7 +99,33 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
 
     @Override
     public void keyReleased(KeyEvent e) {
-   
+     if(e.getSource() == mn.txt_diaHembra){
+         calcularPromedioDiaHembra();
+         
+     }else if(e.getSource() == mn.txt_diaMacho){
+         calcularPromedioDiaMacho();
+         
+     }if(e.getSource() == mn.txt_kgHembra){
+         calcularGrsHembra();
+         
+     }else if(e.getSource() == mn.txt_kgMacho){
+         calcularGrsMacho();
+         
+     }else if(e.getSource() == mn.txt_comercio){
+          calcularTotalHuevos();
+          calcularPromedioINC();
+          calcularPromedioTotal();
+         
+     }if(e.getSource() == mn.txt_roto){
+         calcularTotalHuevos();
+         calcularPromedioINC();
+         calcularPromedioTotal();
+         
+     }else if(e.getSource() == mn.txt_INC){
+         calcularTotalHuevos();
+         calcularPromedioINC();
+         calcularPromedioTotal();
+     }
     }
     
     public void cargarDatosMain(){
@@ -105,7 +135,6 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         ResultSet rs;
         ResultSetMetaData rsmd;
         int columnas;
-
         modeloTabla.addColumn("Fecha");
         modeloTabla.addColumn("Edad");
         modeloTabla.addColumn("Cant. Hembras");
@@ -142,7 +171,6 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 }rs.close();con.close();
         } catch (Exception e) {
             System.err.println("Error en Cargartabla cargarDatosMain: " + e.toString());
-            
         }
     }
    
@@ -187,15 +215,110 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 mn.txt_promedioINC.setText(rs.getString("promedioInc"));
                 mn.txt_comercio.setText(rs.getString("comercio"));
                 mn.txt_roto.setText(rs.getString("roto"));
-
+            }rs.close();con.close();
+            
+            if(mn.txt_fecha.getText().isEmpty()){
+                mn.txt_fecha.setText(fecha);
+                mn.btn_Agregar.setEnabled(true);
+            }else{
+                mn.btn_Agregar.setEnabled(false);
+                mn.btn_modAlimen.setVisible(true);
+                mn.btn_modDatos.setVisible(true);
+                mn.btn_modProd.setVisible(true);
+                mn.btn_modMort.setVisible(true);
             }
-            rs.close();
-            con.close();
         } catch (Exception e) {
-            System.err.println("Error en Cargartabla cargarDatosMain: " + e.toString());
-
+            System.err.println("Error en Cargartabla cargarDatosTxtField: " + e.toString());
         }
     }
     
+    public void calcularPromedioDiaHembra(){
+         if(mn.txt_diaHembra.getText().isEmpty()){
+            mn.txt_promedioHembra.setText("0");
+        }else {
+            Float hembrasMuertas = Float.parseFloat(mn.txt_diaHembra.getText());
+            Float cantVivosAnterior = Float.parseFloat(mn.lb_cantAloHembras.getText());
+            Float result = hembrasMuertas / cantVivosAnterior * 100;
+            mn.txt_promedioHembra.setText("" + result);
+        }
+    }
     
+     public void calcularPromedioDiaMacho(){
+        if(mn.txt_diaMacho.getText().isEmpty()){
+            mn.txt_promedioMacho.setText("0");
+        } else {
+            Float hembrasMuertas = Float.parseFloat(mn.txt_diaMacho.getText());
+            Float cantVivosAnterior = Float.parseFloat(mn.lb_cantAloMachos.getText());
+            Float result = hembrasMuertas / cantVivosAnterior * 100;
+            mn.txt_promedioMacho.setText("" + result);
+        }
+    }
+     
+    public void calcularGrsHembra() {
+        if (mn.txt_kgHembra.getText().isEmpty() || mn.txt_cantHembras.getText().isEmpty()) {
+            mn.txt_grsHembra.setText("0.0");
+        } else {
+            Float kg = Float.parseFloat(mn.txt_kgHembra.getText());
+            Float cantVivos = Float.parseFloat(mn.txt_cantHembras.getText());
+            Float result = kg / cantVivos;
+            mn.txt_grsHembra.setText("" + result);
+        }
+    }
+
+    public void calcularGrsMacho() {
+        if (mn.txt_kgMacho.getText().isEmpty() || mn.txt_cantHembras.getText().isEmpty()) {
+            mn.txt_grsMacho.setText("0.0");
+        } else {
+            Float kgMacho = Float.parseFloat(mn.txt_kgMacho.getText());
+            Float cantVivos = Float.parseFloat(mn.txt_canMachos.getText());
+            Float result = kgMacho / cantVivos;
+            mn.txt_grsMacho.setText("" + result);
+        }
+    }
+    
+    public void calcularTotalHuevos() {
+        int inc = 0;
+        int roto = 0;
+        int comercio = 0;
+        try{
+            if( mn.txt_roto.getText().isEmpty()){  roto = 0;  }else{roto = Integer.parseInt(mn.txt_roto.getText());}
+            if( mn.txt_comercio.getText().isEmpty()){  comercio = 0;  }else{comercio = Integer.parseInt(mn.txt_comercio.getText());}
+            if( mn.txt_INC.getText().isEmpty()){  inc = 0;  }else{inc = Integer.parseInt(mn.txt_INC.getText());}
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(mn, "Digite solo Nuúmeros.");
+        }
+        int totalHuevo = inc + roto + comercio;
+        mn.txt_total1.setText("" + totalHuevo);
+    }
+    
+    public void calcularPromedioINC() {
+        if (mn.txt_INC.getText().isEmpty() || mn.txt_total1.getText().isEmpty()) {
+            mn.txt_promedioINC.setText("0.0");
+        } else {
+            if(mn.txt_INC.getText().equals("0")){
+                 mn.txt_promedioINC.setText("0.0");
+            }else{
+                Float total= Float.parseFloat(mn.txt_total1.getText());
+                Float inc = Float.parseFloat(mn.txt_INC.getText());
+                Float result = inc*100 / total;
+                mn.txt_promedioINC.setText("" + result);
+            }
+        }
+    }
+    
+    public void calcularPromedioTotal() {
+        if (mn.txt_total1.getText().isEmpty() || mn.txt_cantHembras.getText().isEmpty()) {
+            mn.txt_promedioTotal1.setText("0.0");
+        } else {
+            if(mn.txt_total1.getText().equals("0")){
+               mn.txt_promedioTotal1.setText("0.0");
+            }else{
+                Float total= Float.parseFloat(mn.txt_total1.getText());
+                Float hembras = Float.parseFloat(mn.txt_cantHembras.getText());
+                Float result = total / hembras;
+                mn.txt_promedioTotal1.setText("" + result);
+            }
+        }
+    }
+ 
 }
