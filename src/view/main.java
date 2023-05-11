@@ -91,12 +91,12 @@ public class main extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         txt_INC = new javax.swing.JTextField();
         txt_promedioINC = new javax.swing.JTextField();
+        btn_acepConfigProd = new javax.swing.JButton();
         jPanel16 = new javax.swing.JPanel();
         jLabel37 = new javax.swing.JLabel();
         txt_comercio = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
         txt_roto = new javax.swing.JTextField();
-        btn_acepConfigProd = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txt_fecha = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -157,7 +157,13 @@ public class main extends javax.swing.JFrame {
 
         jLabel25.setText("Dia");
 
+        txt_diaMacho.setText("0");
+
         jLabel26.setText("SEL");
+
+        txt_selMacho.setText("0");
+
+        txt_ventasMachos.setText("0");
 
         txt_promedioMacho.setEditable(false);
 
@@ -229,13 +235,19 @@ public class main extends javax.swing.JFrame {
 
         jLabel21.setText("Dia");
 
+        txt_diaHembra.setText("0");
+
         jLabel22.setText("%");
 
         jLabel23.setText("SEL");
 
+        txt_selHembra.setText("0");
+
         jLabel24.setText("Ventas");
 
         txt_promedioHembra.setEditable(false);
+
+        txt_vetntasHembra.setText("0");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -313,6 +325,8 @@ public class main extends javax.swing.JFrame {
 
         jLabel14.setText("GRS");
 
+        txt_kgHembra.setText("0");
+
         txt_grsHembra.setEditable(false);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -353,6 +367,8 @@ public class main extends javax.swing.JFrame {
         jLabel19.setText("KG");
 
         jLabel20.setText("GRS");
+
+        txt_kgMacho.setText("0");
 
         txt_grsMacho.setEditable(false);
 
@@ -417,7 +433,11 @@ public class main extends javax.swing.JFrame {
 
         jLabel39.setText("Total");
 
+        txt_total1.setText("0");
+
         jLabel40.setText("%");
+
+        txt_promedioTotal1.setEditable(false);
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -454,6 +474,12 @@ public class main extends javax.swing.JFrame {
 
         jLabel28.setText("%");
 
+        txt_INC.setText("0");
+
+        txt_promedioINC.setEditable(false);
+
+        btn_acepConfigProd.setText("Aceptar");
+
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
         jPanel14Layout.setHorizontalGroup(
@@ -468,6 +494,10 @@ public class main extends javax.swing.JFrame {
                 .addContainerGap(81, Short.MAX_VALUE))
             .addComponent(txt_INC)
             .addComponent(txt_promedioINC)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_acepConfigProd)
+                .addContainerGap())
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -480,16 +510,19 @@ public class main extends javax.swing.JFrame {
                 .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txt_promedioINC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_acepConfigProd))
         );
 
         jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder("Negocio"));
 
         jLabel37.setText("Comercio");
 
+        txt_comercio.setText("0");
+
         jLabel38.setText("Rotos");
 
-        btn_acepConfigProd.setText("Aceptar");
+        txt_roto.setText("0");
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -504,11 +537,9 @@ public class main extends javax.swing.JFrame {
                     .addComponent(jLabel37))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel16Layout.createSequentialGroup()
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(txt_roto, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txt_comercio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
-                    .addComponent(btn_acepConfigProd))
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(txt_roto, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_comercio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel16Layout.setVerticalGroup(
@@ -522,8 +553,7 @@ public class main extends javax.swing.JFrame {
                 .addComponent(jLabel38)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txt_roto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(btn_acepConfigProd))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -778,7 +808,7 @@ public class main extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(LB_IdDespues, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 460, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
