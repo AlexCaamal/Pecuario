@@ -75,12 +75,12 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == mn.btn_Agregar){
             try {
-                if(insertarRegistro() == false || insertarExistencia()== false  || insertarMortalidad()== false  || 
-                insertarAlimentos() == false || !insertarProduccion() == false ){
-                    JOptionPane.showMessageDialog(mn, "Ocurrio un problema. Verifique");
-                }else{
-                    cargarDatosMain();
+                if(insertarRegistro() || insertarExistencia()|| insertarMortalidad() || 
+                    insertarAlimentos() || insertarProduccion() ){
                     JOptionPane.showMessageDialog(mn, "Se ingreso Correctamente el Registro");
+                    cargarDatosMain();
+                }else{
+                    JOptionPane.showMessageDialog(mn, "Ocurrio un problema. Verifique");
                 }
             } catch (Exception ex) {
                 System.out.println("error en btn_Agregar "+ex.getMessage());
@@ -91,6 +91,18 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             } catch (Exception ex) {
                 System.out.println("error en btn_Agregar "+ex.getMessage());
             }
+            
+        }else if(e.getSource() == mn.btn_modDatos){
+            cargarDatos();
+            
+        }else if(e.getSource() == mn.btn_modMort){
+            cargarMortalidad();
+            
+        }else if(e.getSource() == mn.btn_modAlimen){
+            cargarAlimentos();
+            
+        }else if(e.getSource() == mn.btn_modProd){
+            cargarProduccion();
             
         }
     }
@@ -214,6 +226,152 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             System.err.println("Error en Cargartabla cargarDatosMain: " + e.toString());
         }
     }
+    
+    public void cargarDatos(){
+        DefaultTableModel modeloTabla = new DefaultTableModel();
+        modeloTabla.setRowCount(0);
+        PreparedStatement ps;
+        ResultSet rs;
+        ResultSetMetaData rsmd;
+        int columnas;
+        modeloTabla.addColumn("Fecha");
+        modeloTabla.addColumn("Edad");
+        modeloTabla.addColumn("Cant. Hembras");
+        modeloTabla.addColumn("Cant. Machos");
+        mn.tb_main.setModel(modeloTabla);
+        try {
+            Connection con = conexion.establecerConnection();
+            String sql = "SELECT re.fecha, ex.edad, ex.CantHembras, ex.CanMachos "
+                    + "FROM registros re "
+                    + "INNER JOIN  existencia ex on re.id_registro = ex.id_registro ";
+            
+                ps = con.prepareStatement(sql);
+                rs = ps.executeQuery();
+                rsmd = rs.getMetaData();
+                columnas = rsmd.getColumnCount();
+                while (rs.next()) {
+                    Object[] fila = new Object[columnas];
+                    for (int i = 0; i < columnas; i++) {
+                        fila[i] = rs.getObject(i + 1);
+                    }
+                    modeloTabla.addRow(fila);
+                }rs.close();con.close();
+        } catch (Exception e) {
+            System.err.println("Error en Cargartabla cargarDatos: " + e.toString());
+        }
+    }
+    
+    public void cargarMortalidad(){
+        DefaultTableModel modeloTabla = new DefaultTableModel();
+        modeloTabla.setRowCount(0);
+        PreparedStatement ps;
+        ResultSet rs;
+        ResultSetMetaData rsmd;
+        int columnas;
+        modeloTabla.addColumn("Fecha");
+        modeloTabla.addColumn("Hembras Muertas");
+        modeloTabla.addColumn("%");
+        modeloTabla.addColumn("Selección");
+        modeloTabla.addColumn("Ventas");
+        modeloTabla.addColumn("Machos Muertos ");
+        modeloTabla.addColumn("%");
+        modeloTabla.addColumn("Selección");
+        modeloTabla.addColumn("Ventas");
+        mn.tb_main.setModel(modeloTabla);
+        try {
+            Connection con = conexion.establecerConnection();
+            String sql = "SELECT re.fecha, mo.diaHembra, mo.promedioHembra, mo.selHembra, mo.ventasHembras, mo.diaMachos, mo.promedioMachos, "
+                    + "mo.selMachos, mo.ventasMachos "
+                    + "FROM registros re "
+                    + "INNER JOIN mortalidad mo on re.id_registro = mo.id_registro ";
+            
+                ps = con.prepareStatement(sql);
+                rs = ps.executeQuery();
+                rsmd = rs.getMetaData();
+                columnas = rsmd.getColumnCount();
+                while (rs.next()) {
+                    Object[] fila = new Object[columnas];
+                    for (int i = 0; i < columnas; i++) {
+                        fila[i] = rs.getObject(i + 1);
+                    }
+                    modeloTabla.addRow(fila);
+                }rs.close();con.close();
+        } catch (Exception e) {
+            System.err.println("Error en Cargartabla cargarMortalidad: " + e.toString());
+        }
+    }
+    
+    public void cargarAlimentos(){
+        DefaultTableModel modeloTabla = new DefaultTableModel();
+        modeloTabla.setRowCount(0);
+        PreparedStatement ps;
+        ResultSet rs;
+        ResultSetMetaData rsmd;
+        int columnas;
+        modeloTabla.addColumn("Fecha");
+        modeloTabla.addColumn("KG Hembras");
+        modeloTabla.addColumn("grs Hembras");
+        modeloTabla.addColumn("KG Machos");
+        modeloTabla.addColumn("grs Machos");
+        mn.tb_main.setModel(modeloTabla);
+        try {
+            Connection con = conexion.establecerConnection();
+            String sql = "SELECT re.fecha, ali.kgHembras, ali.grsHembras, ali.kgMachos, ali.grsMachos "
+                    + "FROM registros re "
+                    + "INNER JOIN alimentos ali on re.id_registro = ali.id_registro ";
+            
+                ps = con.prepareStatement(sql);
+                rs = ps.executeQuery();
+                rsmd = rs.getMetaData();
+                columnas = rsmd.getColumnCount();
+                while (rs.next()) {
+                    Object[] fila = new Object[columnas];
+                    for (int i = 0; i < columnas; i++) {
+                        fila[i] = rs.getObject(i + 1);
+                    }
+                    modeloTabla.addRow(fila);
+                }rs.close();con.close();
+        } catch (Exception e) {
+            System.err.println("Error en Cargartabla cargarAlimentos: " + e.toString());
+        }
+    }
+    
+    public void cargarProduccion(){
+        DefaultTableModel modeloTabla = new DefaultTableModel();
+        modeloTabla.setRowCount(0);
+        PreparedStatement ps;
+        ResultSet rs;
+        ResultSetMetaData rsmd;
+        int columnas;
+        modeloTabla.addColumn("Fecha");
+        modeloTabla.addColumn("Incubable");
+        modeloTabla.addColumn("%");
+        modeloTabla.addColumn("Comercio");
+        modeloTabla.addColumn("Rotos");
+        modeloTabla.addColumn("Total de Huevos");
+        modeloTabla.addColumn("%");
+        mn.tb_main.setModel(modeloTabla);
+        try {
+            Connection con = conexion.establecerConnection();
+            String sql = "SELECT re.fecha, pro.incubable, pro.promedioInc, pro.comercio, pro.roto, pro.totalHuevos, pro.promedioTotal "
+                    + "FROM registros re "
+                    + "INNER JOIN produccion pro on re.id_registro = pro.id_registro ";
+            
+                ps = con.prepareStatement(sql);
+                rs = ps.executeQuery();
+                rsmd = rs.getMetaData();
+                columnas = rsmd.getColumnCount();
+                while (rs.next()) {
+                    Object[] fila = new Object[columnas];
+                    for (int i = 0; i < columnas; i++) {
+                        fila[i] = rs.getObject(i + 1);
+                    }
+                    modeloTabla.addRow(fila);
+                }rs.close();con.close();
+        } catch (Exception e) {
+            System.err.println("Error en Cargartabla cargarProduccion: " + e.toString());
+        }
+    }
    
     public void cargarDatosTxtField() {
         PreparedStatement ps;
@@ -249,6 +407,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 mn.txt_promedioMacho.setText(rs.getString("promedioMachos"));
                 mn.txt_selMacho.setText(rs.getString("selMachos"));
                 mn.txt_ventasMachos.setText(rs.getString("ventasMachos"));
+                mn.txt_kgHembra.setText(rs.getString("kgHembras"));
                 mn.txt_kgMacho.setText(rs.getString("kgMachos"));
                 mn.txt_grsMacho.setText(rs.getString("grsMachos"));
                 mn.txt_total1.setText(rs.getString("totalHuevos"));
@@ -327,7 +486,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             if( mn.txt_comercio.getText().isEmpty()){  comercio = 0;  }else{comercio = Integer.parseInt(mn.txt_comercio.getText());}
             if( mn.txt_INC.getText().isEmpty()){  inc = 0;  }else{inc = Integer.parseInt(mn.txt_INC.getText());}
         }catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(mn, "Digite solo Nuúmeros.");
+            JOptionPane.showMessageDialog(mn, "Digite solo Números.");
         }
         int totalHuevo = inc + roto + comercio;
         mn.txt_total1.setText("" + totalHuevo);
