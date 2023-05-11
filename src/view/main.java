@@ -1,7 +1,7 @@
 package view;
 
 
-import Controlador.ControladorMain;
+import Controlador.ControllerMain;
 import Models.conexion;
 import java.io.BufferedWriter;
 import java.sql.ResultSet;
@@ -31,7 +31,7 @@ public class main extends javax.swing.JFrame {
        this.btn_modDatos.setVisible(false);
        this.btn_modAlimen.setVisible(false);
        this.btn_modMort.setVisible(false);
-       ControladorMain mn = new ControladorMain(this);
+       ControllerMain mn = new ControllerMain(this);
       // os.llenarTablas(list_tablas);
     }
 
@@ -120,6 +120,8 @@ public class main extends javax.swing.JFrame {
         lb_cantAloMachos = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         btn_VerGenral = new javax.swing.JButton();
+        LB_IdDespues = new javax.swing.JLabel();
+        LB_ID2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 255));
@@ -156,7 +158,13 @@ public class main extends javax.swing.JFrame {
 
         jLabel25.setText("Dia");
 
+        txt_diaMacho.setText("0");
+
         jLabel26.setText("SEL");
+
+        txt_selMacho.setText("0");
+
+        txt_ventasMachos.setText("0");
 
         txt_promedioMacho.setEditable(false);
 
@@ -233,14 +241,20 @@ public class main extends javax.swing.JFrame {
 
         jLabel21.setText("Dia");
 
+        txt_diaHembra.setText("0");
+
         jLabel22.setText("%");
 
         jLabel23.setText("SEL");
+
+        txt_selHembra.setText("0");
 
         jLabel24.setText("Ventas");
 
         txt_promedioHembra.setEditable(false);
         txt_promedioHembra.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txt_vetntasHembra.setText("0");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -317,6 +331,8 @@ public class main extends javax.swing.JFrame {
 
         jLabel14.setText("GRS");
 
+        txt_kgHembra.setText("0");
+
         txt_grsHembra.setEditable(false);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -357,6 +373,8 @@ public class main extends javax.swing.JFrame {
         jLabel19.setText("KG");
 
         jLabel20.setText("GRS");
+
+        txt_kgMacho.setText("0");
 
         txt_grsMacho.setEditable(false);
 
@@ -459,6 +477,8 @@ public class main extends javax.swing.JFrame {
 
         jLabel28.setText("%");
 
+        txt_INC.setText("0");
+
         txt_promedioINC.setEditable(false);
 
         btn_acepConfigProd.setText("Aceptar");
@@ -498,7 +518,11 @@ public class main extends javax.swing.JFrame {
 
         jLabel37.setText("Comercio");
 
+        txt_comercio.setText("0");
+
         jLabel38.setText("Rotos");
+
+        txt_roto.setText("0");
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -780,7 +804,9 @@ public class main extends javax.swing.JFrame {
                         .addComponent(LB_ID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(141, 141, 141)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(114, 114, 114)
+                .addComponent(LB_IdDespues, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(400, 400, 400))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -789,20 +815,27 @@ public class main extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1337, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jScrollPane1)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(278, 278, 278)
+                    .addComponent(LB_ID2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(1014, 1014, 1014)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(list_tablas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(LB_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(list_tablas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(4, 4, 4)
+                                    .addComponent(LB_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(LB_IdDespues, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -810,6 +843,11 @@ public class main extends javax.swing.JFrame {
                 .addGap(8, 8, 8)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(73, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(59, 59, 59)
+                    .addComponent(LB_ID2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(678, Short.MAX_VALUE)))
         );
 
         pack();
@@ -1037,6 +1075,8 @@ public class main extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JLabel LB_ID;
+    public javax.swing.JLabel LB_ID2;
+    public javax.swing.JLabel LB_IdDespues;
     public javax.swing.JButton btn_Agregar;
     public javax.swing.JButton btn_VerGenral;
     public javax.swing.JButton btn_acepConfigProd;
