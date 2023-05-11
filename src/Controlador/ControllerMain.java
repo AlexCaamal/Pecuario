@@ -359,6 +359,7 @@ public class ControllerMain implements ActionListener, MouseListener, KeyListene
                 Float hembras = Float.parseFloat(mn.txt_cantHembras.getText());
                 Float result = total / hembras;
                 mn.txt_promedioTotal1.setText("" + result);
+                
             }
         }
     }
