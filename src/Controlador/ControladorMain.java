@@ -151,6 +151,18 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
             }
             
+        }else if(e.getSource() == mn.btn_modDatos){
+            cargarDatos();
+            
+        }else if(e.getSource() == mn.btn_modMort){
+            cargarMortalidad();
+            
+        }else if(e.getSource() == mn.btn_modAlimen){
+            cargarAlimentos();
+            
+        }else if(e.getSource() == mn.btn_modProd){
+            cargarProduccion();
+            
         }
     }
 
