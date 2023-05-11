@@ -456,7 +456,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         mn.txt_cantHembras.setText("");
         mn.txt_canMachos.setText("");
         mn.txt_diaHembra.setText("0");
-        mn.txt_promedioHembra.setText("0");
+        mn.txt_promedioHembra.setText("0.0");
         mn.txt_selHembra.setText("0");
         mn.txt_vetntasHembra.setText("0");
         mn.txt_diaMacho.setText("0");
