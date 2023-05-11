@@ -15,13 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.Calendar;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import view.main;
@@ -30,8 +25,9 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
 
     main mn;
     LocalDateTime dia = LocalDateTime.now();
-   DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    String fecha = dia.format(formato); 
+    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    String fecha = "";
+    
 
     public ControladorMain(main mn) {
         this.mn = mn;
@@ -57,6 +53,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         mn.txt_canMachos.addKeyListener(this);
         mn.tb_main.addMouseListener(this);
          
+        fecha = dia.format(formato);
         buscarIdDespues();
         cargarDatosMain();
         cargarDatosTxtField();
@@ -68,15 +65,17 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         calcularGrsHembra();
         calcularGrsMacho();
     }
-    
-    
+    /*
+        TRUNCATE TABLE `registros`;
+        ALTER TABLE `registros` AUTO_INCREMENT=0;
+    */
     
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == mn.btn_Agregar){
             try {
-                if(insertarRegistro() || insertarExistencia()|| insertarMortalidad() || 
-                    insertarAlimentos() || insertarProduccion() ){
+                if(insertarRegistro() && insertarExistencia() && insertarMortalidad() && 
+                    insertarAlimentos() && insertarProduccion() ){
                     JOptionPane.showMessageDialog(mn, "Se ingreso Correctamente el Registro");
                     cargarDatosMain();
                 }else{
@@ -87,9 +86,21 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             }
             
         }else if(e.getSource() == mn.btn_VerGenral){
-            try {cargarDatosMain();
+            try {
+                fecha = dia.format(formato);
+                cargarDatosMain();
+                limpiarCampos();
+                cargarDatosTxtField();
+                mn.btn_acepConfigProd.setVisible(false);
+                mn.btn_aceptedConfigAli.setVisible(false);
+                mn.btn_configMort.setVisible(false);
+                mn.btn_aceptGeneral.setVisible(false);
+                mn.btn_modDatos.setVisible(false);
+                mn.btn_modMort.setVisible(false);
+                mn.btn_modAlimen.setVisible(false);
+                mn.btn_modProd.setVisible(false);
             } catch (Exception ex) {
-                System.out.println("error en btn_Agregar "+ex.getMessage());
+                System.out.println("error en btn_Agregar " + ex.getMessage());
             }
             
         }else if(e.getSource() == mn.btn_modDatos){
@@ -104,12 +115,57 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         }else if(e.getSource() == mn.btn_modProd){
             cargarProduccion();
             
+        }else if(e.getSource() == mn.btn_aceptGeneral){
+            if(UpdateRegistro() && UpdateExistencia()){
+                cargarDatos();
+                mn.btn_aceptGeneral.setVisible(false);
+                JOptionPane.showMessageDialog(mn, "Se modifico correctamente");
+            }else{
+                JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
+            }
+            
+        }else if(e.getSource() == mn.btn_configMort){
+            if(UpdateMortalidad()){
+                cargarMortalidad();
+                mn.btn_configMort.setVisible(false);
+                JOptionPane.showMessageDialog(mn, "Se modifico correctamente");
+            }else{
+                JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
+            }
+            
+        }else if(e.getSource() == mn.btn_aceptedConfigAli){
+            if(UpdateAlimentos()){
+                cargarAlimentos();
+                mn.btn_aceptedConfigAli.setVisible(false);
+                JOptionPane.showMessageDialog(mn, "Se modifico correctamente");
+            }else{
+                JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
+            }
+            
+        }else if(e.getSource() == mn.btn_acepConfigProd){
+            if(UpdateProduccion()){
+                cargarProduccion();
+                mn.btn_acepConfigProd.setVisible(false);
+                JOptionPane.showMessageDialog(mn, "Se modifico correctamente");
+            }else{
+                JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
+            }
+            
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-  
+        if(e.getSource() == mn.tb_main){
+            try{
+                int fila = mn.tb_main.getSelectedRow();
+                String fechasql = mn.tb_main.getValueAt(fila, 0).toString();
+                fecha = fechasql;
+                cargarDatosTxtField();
+            }catch(Exception ex){
+                System.out.println("Error en mouseClicked "+e.toString());
+            }
+        }
     }
 
     @Override
@@ -193,17 +249,25 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         modeloTabla.addColumn("Cant. Hembras");
         modeloTabla.addColumn("Cant. Machos");
         modeloTabla.addColumn("Hembras Muertas");
+        modeloTabla.addColumn("selHembras");
+        modeloTabla.addColumn("VentasHembras");
         modeloTabla.addColumn("Machos Muertos");
+        modeloTabla.addColumn("selMachos");
+        modeloTabla.addColumn("VentasMachos");
         modeloTabla.addColumn("kgHembras");
         modeloTabla.addColumn("kgMachos");
         modeloTabla.addColumn("Total Huevos");
         modeloTabla.addColumn("Incubables");
         modeloTabla.addColumn("Huevos rotos");
         mn.tb_main.setModel(modeloTabla);
+        int[] ancho = {100, 80, 100, 100, 120, 100, 110, 120, 100, 100, 100, 100, 100, 100, 100};
+        for (int i = 0; i < modeloTabla.getColumnCount(); i++) {
+            mn.tb_main.getColumnModel().getColumn(i).setPreferredWidth(ancho[i]);
+        }
         try {
             Connection con = conexion.establecerConnection();
             String sql = "SELECT re.fecha, ex.edad, ex.CantHembras, ex.CanMachos, "
-                    + "mo.diaHembra, mo.diaMachos, ali.kgHembras, ali.kgMachos, pro.totalHuevos, "
+                    + "mo.diaHembra, mo.selHembra, ventasHembras, mo.diaMachos, mo.selMachos, mo.ventasMachos, ali.kgHembras, ali.kgMachos, pro.totalHuevos, "
                     + "pro.incubable, pro.roto "
                     + "FROM registros re "
                     + "INNER JOIN  existencia ex on re.id_registro = ex.id_registro "
@@ -372,6 +436,31 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             System.err.println("Error en Cargartabla cargarProduccion: " + e.toString());
         }
     }
+    
+    public void limpiarCampos() {
+        mn.LB_ID.setText("");
+        mn.txt_fecha.setText("");
+        mn.txtEdad.setText("");
+        mn.txt_cantHembras.setText("");
+        mn.txt_canMachos.setText("");
+        mn.txt_diaHembra.setText("0");
+        mn.txt_promedioHembra.setText("0");
+        mn.txt_selHembra.setText("0");
+        mn.txt_vetntasHembra.setText("0");
+        mn.txt_diaMacho.setText("0");
+        mn.txt_promedioMacho.setText("0.0");
+        mn.txt_selMacho.setText("0");
+        mn.txt_ventasMachos.setText("0");
+        mn.txt_kgHembra.setText("0");
+        mn.txt_kgMacho.setText("0");
+        mn.txt_grsMacho.setText("0.0");
+        mn.txt_total1.setText("0");
+        mn.txt_promedioTotal1.setText("0.0");
+        mn.txt_INC.setText("0");
+        mn.txt_promedioINC.setText("0.0");
+        mn.txt_comercio.setText("0");
+        mn.txt_roto.setText("0");
+    }
    
     public void cargarDatosTxtField() {
         PreparedStatement ps;
@@ -420,6 +509,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             
             if(mn.txt_fecha.getText().isEmpty()){
                 mn.txt_fecha.setText(fecha);
+                calcularCantidadHMMortalidad();
                 mn.btn_Agregar.setEnabled(true);
             }else{
                 mn.btn_Agregar.setEnabled(false);
@@ -676,6 +766,197 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         } catch (Exception e) {
             System.out.println("error en insertarProduccion " + e.getMessage());
             return false;
+        }
+    }
+    
+    public boolean UpdateRegistro(){
+        String fecha = mn.txt_fecha.getText();
+        int id = Integer.parseInt(mn.LB_ID.getText());
+        PreparedStatement ps;
+        ResultSet rs;
+        try {
+            Connection con = conexion.establecerConnection();
+            String sqlInsertar = "UPDATE registros SET fecha = ? WHERE id_registro = ?";
+            ps = con.prepareStatement(sqlInsertar);
+            ps.setString(1, fecha);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            System.out.println("error en UpdateRegistro "+e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean UpdateExistencia() {
+        try {
+            if(mn.txtEdad.getText().isEmpty() || mn.txt_cantHembras.getText().isEmpty() || mn.txt_canMachos.getText().isEmpty()){
+                JOptionPane.showMessageDialog(mn, "Digite la edad, Cantidad de Hembra o Cantidad de Machos.");
+                return false;
+            } else {
+                int id = Integer.parseInt(mn.LB_ID.getText());
+                int edad = Integer.parseInt(mn.txtEdad.getText());
+                int cantHembras = Integer.parseInt(mn.txt_cantHembras.getText());
+                int cantMachos = Integer.parseInt(mn.txt_canMachos.getText());
+                PreparedStatement ps;
+                ResultSet rs;
+                Connection con = conexion.establecerConnection();
+                String sqlInsertar = "UPDATE existencia SET CanMachos = ?, CantHembras = ?, edad = ? WHERE id_registro = ?";
+                ps = con.prepareStatement(sqlInsertar);
+                ps.setInt(1, cantMachos);
+                ps.setInt(2, cantHembras);
+                ps.setInt(3, edad);
+                ps.setInt(4, id);
+                ps.executeUpdate();
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println("error en UpdateExistencia " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean UpdateMortalidad(){
+        try {
+            int MuerteHembra = Integer.parseInt(mn.txt_diaHembra.getText());
+            int MuerteMacho = Integer.parseInt(mn.txt_diaMacho.getText());
+            int id = Integer.parseInt(mn.LB_ID.getText());
+            Float promedioH = Float.parseFloat(mn.txt_promedioHembra.getText());
+            Float promedioM = Float.parseFloat(mn.txt_promedioMacho.getText());
+            int selHembras = Integer.parseInt(mn.txt_selHembra.getText());
+            int selHombre = Integer.parseInt(mn.txt_selMacho.getText());
+            int ventaHembra = Integer.parseInt(mn.txt_vetntasHembra.getText());
+            int ventaMachos = Integer.parseInt(mn.txt_ventasMachos.getText());
+            
+            PreparedStatement ps;
+            ResultSet rs;
+            Connection con = conexion.establecerConnection();
+            String sqlInsertar = "UPDATE mortalidad  SET diaHembra = ?, promedioHembra = ?, selHembra = ?, ventasHembras = ?, "
+                    + "diaMachos = ?, promedioMachos = ?, selMachos = ?, ventasMachos = ? WHERE id_registro = ?";
+            ps = con.prepareStatement(sqlInsertar);
+            ps.setInt(1, MuerteHembra);
+            ps.setFloat(2, promedioH);
+            ps.setInt(3, selHembras);
+            ps.setInt(4, ventaHembra);
+            ps.setInt(5, MuerteMacho);
+            ps.setFloat(6, promedioM);
+            ps.setInt(7, selHombre);
+            ps.setInt(8, ventaMachos);
+            ps.setInt(9, id);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            System.out.println("error en UpdateMortalidad " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean UpdateAlimentos(){
+        try {
+            int kgHembra = Integer.parseInt(mn.txt_kgHembra.getText());
+            int kgMacho = Integer.parseInt(mn.txt_kgMacho.getText());
+            int id = Integer.parseInt(mn.LB_ID.getText());
+            Float grsH = Float.parseFloat(mn.txt_grsHembra.getText());
+            Float grsM = Float.parseFloat(mn.txt_grsMacho.getText());
+            
+            PreparedStatement ps;
+            ResultSet rs;
+            Connection con = conexion.establecerConnection();
+            String sqlInsertar = "UPDATE alimentos SET kgHembras = ?, grsHembras = ?, "
+                    + "kgMachos = ?, grsMachos = ? WHERE id_registro = ?";
+            ps = con.prepareStatement(sqlInsertar);
+            ps.setInt(1, kgHembra);
+            ps.setFloat(2, grsH);
+            ps.setInt(3, kgMacho);
+            ps.setFloat(4, grsM);
+            ps.setInt(5, id);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            System.out.println("error en UpdateAlimentos " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean UpdateProduccion(){
+        try {
+            int totalHuevo = Integer.parseInt(mn.txt_total1.getText());
+            Float promedioTotal = Float.parseFloat(mn.txt_promedioTotal1.getText());
+            int id = Integer.parseInt(mn.LB_ID.getText());
+            int inc = Integer.parseInt(mn.txt_INC.getText());
+            Float promInc = Float.parseFloat(mn.txt_promedioINC.getText());
+            int comercio = Integer.parseInt(mn.txt_comercio.getText());
+            int roto = Integer.parseInt(mn.txt_roto.getText());
+            
+            PreparedStatement ps;
+            ResultSet rs;
+            Connection con = conexion.establecerConnection();
+            String sqlInsertar = "UPDATE produccion SET totalHuevos = ?, promedioTotal = ?, "
+                    + "incubable = ?, promedioInc = ?, comercio = ?, roto = ? WHERE id_registro = ?";
+            ps = con.prepareStatement(sqlInsertar);
+            ps.setInt(1, totalHuevo);
+            ps.setFloat(2, promedioTotal);
+            ps.setInt(3, inc);
+            ps.setFloat(4, promInc);
+            ps.setInt(5, comercio);
+            ps.setInt(6, roto);
+            ps.setInt(7, id);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            System.out.println("error en UpdateProduccion " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public void calcularCantidadHMMortalidad(){
+        int id = 0; 
+        if(mn.LB_IdDespues.getText().isEmpty()){
+            id = 0;
+        }else{
+            id = Integer.parseInt(mn.LB_IdDespues.getText())-1;
+        }
+        int muerteH = 0, muerteM = 0;
+        int vivosH = 0, vivosM = 0;
+        if(id == 0){
+            mn.txt_cantHembras.setText(mn.lb_cantAloHembras.getText());
+            mn.txt_canMachos.setText(mn.lb_cantAloMachos.getText());
+        } else {
+            try {
+                PreparedStatement ps;
+                ResultSet rs;
+                Connection con = conexion.establecerConnection();
+                String sqlInsertar = "SELECT diaHembra, selHembra,ventasHembras, diaMachos, selMachos, ventasMachos FROM mortalidad WHERE id_registro = ?";
+                ps = con.prepareStatement(sqlInsertar);
+                ps.setInt(1, id);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    muerteH = (rs.getInt("diaHembra") + rs.getInt("selHembra") + rs.getInt("ventasHembras"));
+                    muerteM = (rs.getInt("diaMachos") + rs.getInt("selMachos") + rs.getInt("ventasMachos"));
+                }
+                rs.close();
+                con.close();
+            } catch (Exception e) {
+                System.out.println("error calcularCantidadHMMortalidad " + e.getMessage());
+            }
+            
+            try {
+                PreparedStatement ps;
+                ResultSet rs;
+                Connection con = conexion.establecerConnection();
+                String sqlInsertar = "SELECT CanMachos, CantHembras FROM existencia WHERE id_registro = ?";
+                ps = con.prepareStatement(sqlInsertar);
+                ps.setInt(1, id);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    vivosH = rs.getInt("CantHembras") ;
+                    vivosM = rs.getInt("CanMachos");
+                } rs.close(); con.close();
+            } catch (Exception e) {
+                System.out.println("error calcularCantidadHMMortalidad " + e.getMessage());
+            }
+            mn.txt_cantHembras.setText(""+(vivosH - muerteH));
+            mn.txt_canMachos.setText(""+(vivosM - muerteM));
         }
     }
 }
