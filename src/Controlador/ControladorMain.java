@@ -52,8 +52,11 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         mn.txt_cantHembras.addKeyListener(this);
         mn.txt_canMachos.addKeyListener(this);
         mn.tb_main.addMouseListener(this);
+        mn.cbx_tablas.addActionListener(this);
+        this.mn.btn_AceptarLote.addActionListener(this);
          
         fecha = dia.format(formato);
+        cargarUltimoLote();
         buscarIdDespues();
         cargarDatosMain();
         cargarDatosTxtField();
@@ -163,6 +166,33 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         }else if(e.getSource() == mn.btn_modProd){
             cargarProduccion();
             
+        }else if(e.getSource() == mn.cbx_tablas){
+            String eleccion = mn.cbx_tablas.getSelectedItem().toString();
+            switch (eleccion) {
+                case "DATOS GENERALES":
+                    cargarDatosMain();
+                    break;
+                case "EXISTENCIA":
+                    cargarDatos();
+                    break;
+                case "MORTALIDAD":
+                    cargarMortalidad();
+                    break;
+                case "ALIMENTOS":
+                    cargarAlimentos();
+                    break;
+                case "PRODUCCIÓN":
+                    cargarProduccion();
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+            
+        }else if(e.getSource() == mn.btn_AceptarLote){
+            String lote = mn.txt_lote.getText();
+            mn.LB_lote.setText(lote);
+            cargarDatosMain();
+            mn.Lote.dispose();
         }
     }
 
@@ -255,6 +285,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         PreparedStatement ps;
         ResultSet rs;
         ResultSetMetaData rsmd;
+        String lote = mn.LB_lote.getText();
         int columnas;
         modeloTabla.addColumn("Fecha");
         modeloTabla.addColumn("Edad");
@@ -285,9 +316,11 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                     + "INNER JOIN  existencia ex on re.id_registro = ex.id_registro "
                     + "INNER JOIN mortalidad mo on re.id_registro = mo.id_registro "
                     + "INNER JOIN alimentos ali on re.id_registro = ali.id_registro "
-                    + "INNER JOIN produccion pro on re.id_registro = pro.id_registro ";
+                    + "INNER JOIN produccion pro on re.id_registro = pro.id_registro "
+                    + "WHERE re.id_lote = ? ";
             
                 ps = con.prepareStatement(sql);
+                ps.setString(1, lote);
                 rs = ps.executeQuery();
                 rsmd = rs.getMetaData();
                 columnas = rsmd.getColumnCount();
@@ -473,9 +506,25 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         mn.txt_comercio.setText("0");
         mn.txt_roto.setText("0");
     }
+    
+    public void cargarUltimoLote(){
+        try {
+            PreparedStatement ps;
+            ResultSet rs;
+            Connection con = conexion.establecerConnection();
+            ps = con.prepareStatement("SELECT MAX(lote) as lote FROM lote");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                mn.LB_lote.setText(rs.getString("lote"));
+            }rs.close();con.close();
+        } catch (Exception er) {
+            System.err.println("Error en cargarUltimoTXT: " + er.toString());
+        }
+    }
    
     public void cargarDatosTxtField() {
         PreparedStatement ps;
+        String lote = mn.LB_lote.getText();
         ResultSet rs;
         try {
             Connection con = conexion.establecerConnection();
@@ -489,10 +538,11 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                     + "INNER JOIN mortalidad mo on re.id_registro = mo.id_registro "
                     + "INNER JOIN alimentos ali on re.id_registro = ali.id_registro "
                     + "INNER JOIN produccion pro on re.id_registro = pro.id_registro "
-                    + "WHERE re.fecha= ?";
+                    + "WHERE re.fecha= ? AND id_lote = ?";
 
             ps = con.prepareStatement(sql);
             ps.setString(1, fecha);
+            ps.setString(2, lote);
             rs = ps.executeQuery();
             while (rs.next()) {
                 mn.LB_ID.setText(rs.getString("id_registro"));

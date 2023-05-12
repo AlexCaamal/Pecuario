@@ -1,6 +1,7 @@
 package view;
 
 
+import Controlador.ControladorLote;
 import Controlador.ControladorMain;
 import Models.conexion;
 import java.io.BufferedWriter;
@@ -31,7 +32,10 @@ public class main extends javax.swing.JFrame {
        this.btn_modDatos.setVisible(false);
        this.btn_modAlimen.setVisible(false);
        this.btn_modMort.setVisible(false);
+       this.LB_IdDespues.setVisible(false);
+       this.LB_ID.setVisible(false);
        ControladorMain mn = new ControladorMain(this);
+       ControladorLote lt = new ControladorLote(this);
       // os.llenarTablas(list_tablas);
     }
 
@@ -47,18 +51,24 @@ public class main extends javax.swing.JFrame {
         Lote = new javax.swing.JFrame();
         jPanel7 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        btn_eliminarLote = new javax.swing.JButton();
         txt_lote = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txt_fechaNacimiento = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txt_HembrasIniciadas = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txt_MachosIniciados = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txt_HembrasAlojadas = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txt_MachosAlojados = new javax.swing.JTextField();
+        cbx_lotes = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
+        btn_AceptarLote = new javax.swing.JButton();
+        btn_nuevo = new javax.swing.JButton();
+        btn_editarLote = new javax.swing.JButton();
+        btn_registrarLote = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tb_main = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
@@ -126,7 +136,7 @@ public class main extends javax.swing.JFrame {
         btn_modAlimen = new javax.swing.JButton();
         btn_modProd = new javax.swing.JButton();
         btn_aceptGeneral = new javax.swing.JButton();
-        list_tablas = new javax.swing.JComboBox<>();
+        cbx_tablas = new javax.swing.JComboBox<>();
         LB_ID = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -137,45 +147,80 @@ public class main extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         btn_VerGenral = new javax.swing.JButton();
         LB_IdDespues = new javax.swing.JLabel();
+        LB_lote = new javax.swing.JLabel();
 
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel8.setText("No. Lote: ");
-        jPanel7.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
+        jLabel8.setText("Lotes Anteriores:");
+        jPanel7.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 110, -1));
 
-        jButton2.setText("Aceptar");
-        jPanel7.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, -1, -1));
-        jPanel7.add(txt_lote, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 150, 25));
-        jPanel7.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 50, 150, 25));
+        btn_eliminarLote.setText("Eliminar");
+        jPanel7.add(btn_eliminarLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 140, 90, -1));
+
+        txt_lote.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txt_lote, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 140, 25));
+
+        txt_fechaNacimiento.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txt_fechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 140, 25));
 
         jLabel9.setText("Fecha de Nacimiento:");
-        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, -1, -1));
-        jPanel7.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 90, 150, 25));
+        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, -1, -1));
+
+        txt_HembrasIniciadas.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txt_HembrasIniciadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 140, 140, 25));
 
         jLabel11.setText("Hembras Iniciadas: ");
-        jPanel7.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, -1, -1));
-        jPanel7.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, 150, 25));
+        jPanel7.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, -1, -1));
+
+        txt_MachosIniciados.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txt_MachosIniciados, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, 140, 25));
 
         jLabel12.setText("Machos Iniciados: ");
-        jPanel7.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, -1, -1));
+        jPanel7.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, -1, -1));
 
-        jLabel15.setText("Machos Iniciados: ");
-        jPanel7.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, -1, -1));
-        jPanel7.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, 150, 25));
+        jLabel15.setText("Hembras Alojadas:");
+        jPanel7.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, -1, -1));
 
-        jLabel16.setText("Machos Iniciados: ");
-        jPanel7.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, -1, -1));
-        jPanel7.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 210, 150, 25));
+        txt_HembrasAlojadas.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txt_HembrasAlojadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 140, 25));
+
+        jLabel16.setText("Machos Alojados:");
+        jPanel7.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, -1, -1));
+
+        txt_MachosAlojados.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txt_MachosAlojados, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 140, 25));
+
+        jPanel7.add(cbx_lotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 20, 140, 30));
+
+        jLabel17.setText("No. Lote: ");
+        jPanel7.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, -1, -1));
+
+        btn_AceptarLote.setText("Aceptar");
+        btn_AceptarLote.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_AceptarLoteActionPerformed(evt);
+            }
+        });
+        jPanel7.add(btn_AceptarLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 310, -1, -1));
+
+        btn_nuevo.setText("Nuevo");
+        jPanel7.add(btn_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 180, 90, -1));
+
+        btn_editarLote.setText("Editar");
+        jPanel7.add(btn_editarLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 100, 90, -1));
+
+        btn_registrarLote.setText("Registrar");
+        jPanel7.add(btn_registrarLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 60, 90, -1));
 
         javax.swing.GroupLayout LoteLayout = new javax.swing.GroupLayout(Lote.getContentPane());
         Lote.getContentPane().setLayout(LoteLayout);
         LoteLayout.setHorizontalGroup(
             LoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
         );
         LoteLayout.setVerticalGroup(
             LoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -796,7 +841,7 @@ public class main extends javax.swing.JFrame {
 
         btn_modDatos.getAccessibleContext().setAccessibleDescription("");
 
-        list_tablas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tablas" }));
+        cbx_tablas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DATOS GENERALES", "EXISTENCIA", "MORTALIDAD", "ALIMENTOS", "PRODUCCIÓN" }));
 
         jLabel6.setText("Hembras Alojadas: ");
 
@@ -866,21 +911,23 @@ public class main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(list_tablas, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbx_tablas, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(LB_ID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(141, 141, 141)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(LB_IdDespues, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 455, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(LB_lote, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 361, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(552, 552, 552)
                         .addComponent(btn_VerGenral))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1342, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1342, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -888,18 +935,23 @@ public class main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(list_tablas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(LB_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(LB_IdDespues, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbx_tablas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(4, 4, 4)
+                                        .addComponent(LB_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(LB_IdDespues, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(LB_lote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_VerGenral)
@@ -995,10 +1047,14 @@ public class main extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_VerGenralActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Lote.setSize(400, 400);
+        Lote.setSize(450, 400);
         Lote.setLocationRelativeTo(this);
         Lote.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btn_AceptarLoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AceptarLoteActionPerformed
+       
+    }//GEN-LAST:event_btn_AceptarLoteActionPerformed
 
    
     
@@ -1138,19 +1194,26 @@ public class main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JLabel LB_ID;
     public javax.swing.JLabel LB_IdDespues;
-    private javax.swing.JFrame Lote;
+    public javax.swing.JLabel LB_lote;
+    public javax.swing.JFrame Lote;
+    public javax.swing.JButton btn_AceptarLote;
     public javax.swing.JButton btn_Agregar;
     public javax.swing.JButton btn_VerGenral;
     public javax.swing.JButton btn_acepConfigProd;
     public javax.swing.JButton btn_aceptGeneral;
     public javax.swing.JButton btn_aceptedConfigAli;
     public javax.swing.JButton btn_configMort;
+    public javax.swing.JButton btn_editarLote;
+    public javax.swing.JButton btn_eliminarLote;
     public javax.swing.JButton btn_modAlimen;
     public javax.swing.JButton btn_modDatos;
     public javax.swing.JButton btn_modMort;
     public javax.swing.JButton btn_modProd;
+    public javax.swing.JButton btn_nuevo;
+    public javax.swing.JButton btn_registrarLote;
+    public javax.swing.JComboBox<String> cbx_lotes;
+    public javax.swing.JComboBox<String> cbx_tablas;
     private javax.swing.JButton jButton1;
-    public javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     public javax.swing.JLabel jLabel11;
@@ -1159,6 +1222,7 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     public javax.swing.JLabel jLabel15;
     public javax.swing.JLabel jLabel16;
+    public javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -1197,23 +1261,22 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    public javax.swing.JTextField jTextField2;
-    public javax.swing.JTextField jTextField3;
-    public javax.swing.JTextField jTextField4;
-    public javax.swing.JTextField jTextField5;
-    public javax.swing.JTextField jTextField6;
     public javax.swing.JLabel lb_cantAloHembras;
     public javax.swing.JLabel lb_cantAloMachos;
-    public javax.swing.JComboBox<String> list_tablas;
     public javax.swing.JTable tb_main;
     public javax.swing.JTextField txtEdad;
+    public javax.swing.JTextField txt_HembrasAlojadas;
+    public javax.swing.JTextField txt_HembrasIniciadas;
     public javax.swing.JTextField txt_INC;
+    public javax.swing.JTextField txt_MachosAlojados;
+    public javax.swing.JTextField txt_MachosIniciados;
     public javax.swing.JTextField txt_canMachos;
     public javax.swing.JTextField txt_cantHembras;
     public javax.swing.JTextField txt_comercio;
     public javax.swing.JTextField txt_diaHembra;
     public javax.swing.JTextField txt_diaMacho;
     public javax.swing.JTextField txt_fecha;
+    public javax.swing.JTextField txt_fechaNacimiento;
     public javax.swing.JTextField txt_grsHembra;
     public javax.swing.JTextField txt_grsMacho;
     public javax.swing.JTextField txt_kgHembra;
