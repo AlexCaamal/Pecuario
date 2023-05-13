@@ -166,6 +166,54 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         }else if(e.getSource() == mn.btn_modProd){
             cargarProduccion();
             
+        }else if(e.getSource() == mn.btn_aceptGeneral){
+            if(UpdateRegistro() && UpdateExistencia()){
+                cargarDatos();
+                mn.btn_aceptGeneral.setVisible(false);
+                JOptionPane.showMessageDialog(mn, "Se modifico correctamente");
+            }else{
+                JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
+            }
+            
+        }else if(e.getSource() == mn.btn_configMort){
+            if(UpdateMortalidad()){
+                cargarMortalidad();
+                mn.btn_configMort.setVisible(false);
+                JOptionPane.showMessageDialog(mn, "Se modifico correctamente");
+            }else{
+                JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
+            }
+            
+        }else if(e.getSource() == mn.btn_aceptedConfigAli){
+            if(UpdateAlimentos()){
+                cargarAlimentos();
+                mn.btn_aceptedConfigAli.setVisible(false);
+                JOptionPane.showMessageDialog(mn, "Se modifico correctamente");
+            }else{
+                JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
+            }
+            
+        }else if(e.getSource() == mn.btn_acepConfigProd){
+            if(UpdateProduccion()){
+                cargarProduccion();
+                mn.btn_acepConfigProd.setVisible(false);
+                JOptionPane.showMessageDialog(mn, "Se modifico correctamente");
+            }else{
+                JOptionPane.showMessageDialog(mn, "Ocurrio un error. Verifique los datos.");
+            }
+            
+        }else if(e.getSource() == mn.btn_modDatos){
+            cargarDatos();
+            
+        }else if(e.getSource() == mn.btn_modMort){
+            cargarMortalidad();
+            
+        }else if(e.getSource() == mn.btn_modAlimen){
+            cargarAlimentos();
+            
+        }else if(e.getSource() == mn.btn_modProd){
+            cargarProduccion();
+            
         }else if(e.getSource() == mn.cbx_tablas){
             String eleccion = mn.cbx_tablas.getSelectedItem().toString();
             switch (eleccion) {
