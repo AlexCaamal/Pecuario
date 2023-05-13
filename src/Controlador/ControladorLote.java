@@ -35,7 +35,6 @@ public class ControladorLote implements ActionListener, KeyListener{
         this.mn = mn;
         this.mn.btn_AceptarLote.addActionListener(this);
         this.mn.btn_nuevo.addActionListener(this);
-        this.mn.btn_eliminarLote.addActionListener(this);
         this.mn.btn_editarLote.addActionListener(this);
         this.mn.btn_registrarLote.addActionListener(this);
         this.mn.txt_lote.addKeyListener(this);
@@ -54,9 +53,7 @@ public class ControladorLote implements ActionListener, KeyListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      if(e.getSource() == mn.btn_AceptarLote){
-          
-      }else if(e.getSource() == mn.btn_AceptarLote){
+    if(e.getSource() == mn.btn_AceptarLote){
           if(mn.txt_lote.getText().isEmpty()){
               JOptionPane.showMessageDialog(mn, "Insegre el Lote");
               mn.txt_lote.requestFocus(true);
@@ -76,17 +73,20 @@ public class ControladorLote implements ActionListener, KeyListener{
               mn.btn_nuevo.setText("Nuevo");
           }
           
-      }else if(e.getSource() == mn.btn_eliminarLote){
-          
       }else if(e.getSource() == mn.btn_editarLote){
           ActualizarLote();
       }else if(e.getSource() == mn.btn_registrarLote){
-          registrarLote();
+          if(verificarExiteLote()){
+              registrarLote();
+          }else{
+              JOptionPane.showMessageDialog(mn, "El lote ya se encuentra Registrado");
+          }
       }else if(e.getSource() == mn.cbx_lotes){
           cargarLotes();
           limpiar();
           cargarUltimos();
       }else if(e.getSource() == mn.btn_config){
+          cargarUltimos();
           botones(true, true, true, false, false);
           mn.Lote.setSize(450, 450);
           mn.Lote.setLocationRelativeTo(mn);
@@ -106,7 +106,11 @@ public class ControladorLote implements ActionListener, KeyListener{
     public void keyReleased(KeyEvent e) {
         if(e.getSource() == mn.txt_lote || e.getSource() == mn.txt_fecha ||e.getSource() == mn.txt_HembrasIniciadas || 
            e.getSource() == mn.txt_MachosIniciados){
-            botones(true, true, true, true, false);
+            if(mn.btn_nuevo.getText().equals("Nuevo")){
+                botones(true, true, true, true, false);
+            }else if(mn.btn_nuevo.getText().equals("Cancelar")){
+                 botones(true, true, false, false, true);
+            }
         }
     }
     
@@ -118,7 +122,6 @@ public class ControladorLote implements ActionListener, KeyListener{
     public void botones(boolean btn_AceptarLote,boolean btn_nuevo,boolean btn_eliminarLote,boolean btn_editarLote,boolean btn_registrarLote){
         this.mn.btn_AceptarLote.setVisible(btn_AceptarLote);
         this.mn.btn_nuevo.setVisible(btn_nuevo);
-        this.mn.btn_eliminarLote.setVisible(btn_eliminarLote);
         this.mn.btn_editarLote.setVisible(btn_editarLote);
         this.mn.btn_registrarLote.setVisible(btn_registrarLote);
     }
@@ -237,6 +240,26 @@ public class ControladorLote implements ActionListener, KeyListener{
                 JOptionPane.showMessageDialog(mn, "Error. Verifique que los datos estes correctos...");
             }
         }
+    }
+    
+    public boolean verificarExiteLote() {
+        String resultLote = "";
+        String lote = mn.txt_lote.getText();
+        try {
+            PreparedStatement ps;
+            ResultSet rs;
+            Connection con = conexion.establecerConnection();
+            String sqlInsertar = "SELECT lote FROM lote WHERE lote = ?";
+            ps = con.prepareStatement(sqlInsertar);
+            ps.setString(1, lote);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                resultLote = rs.getString("lote");
+            }
+        } catch (Exception e) {
+            System.out.println("error en UpdateRegistro " + e.getMessage());
+        }
+        return resultLote.equals("");
     }
     
     public void ActualizarLote(){
