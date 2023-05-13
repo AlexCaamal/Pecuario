@@ -512,10 +512,12 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             PreparedStatement ps;
             ResultSet rs;
             Connection con = conexion.establecerConnection();
-            ps = con.prepareStatement("SELECT MAX(lote) as lote FROM lote");
+            ps = con.prepareStatement("SELECT MAX(lote) as lote, HembrasAlojadas, MachosAlojados FROM lote");
             rs = ps.executeQuery();
             while (rs.next()) {
                 mn.LB_lote.setText(rs.getString("lote"));
+                mn.lb_cantAloHembras.setText(rs.getString("HembrasAlojadas"));
+                mn.lb_cantAloMachos.setText(rs.getString("MachosAlojados"));
             }rs.close();con.close();
         } catch (Exception er) {
             System.err.println("Error en cargarUltimoTXT: " + er.toString());
