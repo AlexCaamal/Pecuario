@@ -34,12 +34,12 @@ public class main extends javax.swing.JFrame {
        this.btn_modDatos.setVisible(false);
        this.btn_modAlimen.setVisible(false);
        this.btn_modMort.setVisible(false);
-       this.LB_IdDespues.setVisible(true);
+       this.LB_IdDespues.setVisible(false);
        this.LB_ID.setVisible(false);
        this.lb_loteAnt.setVisible(false);
        this.lb_idLote.setVisible(false);
-       this.lb_cantAloHembras1.setVisible(true);
-       this.lb_cantAloMachos1.setVisible(true);
+       this.lb_cantAloHembras1.setVisible(false);
+       this.lb_cantAloMachos1.setVisible(false);
        ControladorMain mn = new ControladorMain(this);
        setIconImage(new ImageIcon(getClass().getResource("/img/logo2.jpeg")).getImage());
        this.Lote.setIconImage(new ImageIcon(getClass().getResource("/img/logo2.jpeg")).getImage());
@@ -84,6 +84,7 @@ public class main extends javax.swing.JFrame {
         JP_aviso = new javax.swing.JPanel();
         lb_aviso = new javax.swing.JLabel();
         btn_recargar = new javax.swing.JButton();
+        btn_eliminarLote = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -230,7 +231,7 @@ public class main extends javax.swing.JFrame {
         btn_nuevo.setBackground(new java.awt.Color(153, 0, 0));
         btn_nuevo.setForeground(new java.awt.Color(255, 255, 255));
         btn_nuevo.setText("Nuevo");
-        jPanel7.add(btn_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 170, 90, -1));
+        jPanel7.add(btn_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 210, 90, -1));
 
         btn_editarLote.setBackground(new java.awt.Color(153, 0, 0));
         btn_editarLote.setForeground(new java.awt.Color(255, 255, 255));
@@ -293,6 +294,11 @@ public class main extends javax.swing.JFrame {
         btn_recargar.setForeground(new java.awt.Color(255, 255, 255));
         btn_recargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/recargar.png"))); // NOI18N
         jPanel7.add(btn_recargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, 90, 30));
+
+        btn_eliminarLote.setBackground(new java.awt.Color(153, 0, 0));
+        btn_eliminarLote.setForeground(new java.awt.Color(255, 255, 255));
+        btn_eliminarLote.setText("Eliminar");
+        jPanel7.add(btn_eliminarLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 170, 90, -1));
 
         javax.swing.GroupLayout LoteLayout = new javax.swing.GroupLayout(Lote.getContentPane());
         Lote.getContentPane().setLayout(LoteLayout);
@@ -987,6 +993,7 @@ public class main extends javax.swing.JFrame {
     public javax.swing.JButton btn_config;
     public javax.swing.JButton btn_configMort;
     public javax.swing.JButton btn_editarLote;
+    public javax.swing.JButton btn_eliminarLote;
     public javax.swing.JButton btn_modAlimen;
     public javax.swing.JButton btn_modDatos;
     public javax.swing.JButton btn_modMort;
