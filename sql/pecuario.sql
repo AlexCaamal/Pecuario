@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3305
--- Tiempo de generación: 13-05-2023 a las 16:15:34
+-- Tiempo de generación: 15-05-2023 a las 17:51:58
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -36,13 +36,6 @@ CREATE TABLE `alimentos` (
   `id_registro` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `alimentos`
---
-
-INSERT INTO `alimentos` (`id_alimentos`, `kgHembras`, `grsHembras`, `kgMachos`, `grsMachos`, `id_registro`) VALUES
-(1, 210, 0.09226713, 10, 0.037453182, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -56,13 +49,6 @@ CREATE TABLE `existencia` (
   `CantHembras` int(11) NOT NULL DEFAULT 0,
   `edad` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `existencia`
---
-
-INSERT INTO `existencia` (`id_existencia`, `CanMachos`, `id_registro`, `CantHembras`, `edad`) VALUES
-(1, 267, 1, 2276, 24);
 
 -- --------------------------------------------------------
 
@@ -86,7 +72,8 @@ CREATE TABLE `lote` (
 --
 
 INSERT INTO `lote` (`id_lote`, `lote`, `FechaDeNacimiento`, `HembrasInicio`, `MachosInicio`, `HembrasAlojadas`, `MachosAlojados`, `Estado`) VALUES
-(1, '148', '23/05/2022', 2744, 2411, 2276, 267, 'Activo');
+(1, '147', '23/05/2022', 2747, 267, 2276, 267, 'Activo'),
+(2, '148', '15/05/2023', 1522, 5555, 5669, 255, 'Activo');
 
 -- --------------------------------------------------------
 
@@ -107,13 +94,6 @@ CREATE TABLE `mortalidad` (
   `id_registro` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `mortalidad`
---
-
-INSERT INTO `mortalidad` (`id_mortalidad`, `diaHembra`, `promedioHembra`, `selHembra`, `ventasHembras`, `diaMachos`, `promedioMachos`, `selMachos`, `ventasMachos`, `id_registro`) VALUES
-(1, 1, 0.043936733, 1, 0, 1, 0.37453184, 0, 3, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -131,13 +111,6 @@ CREATE TABLE `produccion` (
   `id_registro` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `produccion`
---
-
-INSERT INTO `produccion` (`id_produccion`, `totalHuevos`, `promedioTotal`, `incubable`, `promedioInc`, `comercio`, `roto`, `id_registro`) VALUES
-(1, 33, 0.014499121, 3, 9.090909, 5, 25, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -149,13 +122,6 @@ CREATE TABLE `registros` (
   `fecha` varchar(50) NOT NULL,
   `id_lote` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `registros`
---
-
-INSERT INTO `registros` (`id_registro`, `fecha`, `id_lote`) VALUES
-(1, '10/05/2023', '148');
 
 -- --------------------------------------------------------
 
@@ -169,6 +135,24 @@ CREATE TABLE `user` (
   `usuario` varchar(50) NOT NULL,
   `contraseña` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `vista`
+--
+
+CREATE TABLE `vista` (
+  `id` int(11) NOT NULL,
+  `loteSelected` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `vista`
+--
+
+INSERT INTO `vista` (`id`, `loteSelected`) VALUES
+(1, '148');
 
 --
 -- Índices para tablas volcadas
@@ -222,6 +206,12 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`);
 
 --
+-- Indices de la tabla `vista`
+--
+ALTER TABLE `vista`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -229,13 +219,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de la tabla `alimentos`
 --
 ALTER TABLE `alimentos`
-  MODIFY `id_alimentos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_alimentos` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `existencia`
 --
 ALTER TABLE `existencia`
-  MODIFY `id_existencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_existencia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `lote`
@@ -247,25 +237,31 @@ ALTER TABLE `lote`
 -- AUTO_INCREMENT de la tabla `mortalidad`
 --
 ALTER TABLE `mortalidad`
-  MODIFY `id_mortalidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_mortalidad` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `produccion`
 --
 ALTER TABLE `produccion`
-  MODIFY `id_produccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_produccion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `registros`
 --
 ALTER TABLE `registros`
-  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
   MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `vista`
+--
+ALTER TABLE `vista`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -42,7 +42,7 @@ public class conexion {
       }
       catch(SQLException e)
       {
-          JOptionPane.showMessageDialog(null,"Error" + e.toString());
+          JOptionPane.showMessageDialog(null,"Error: No se conecto a la Base de datos. Verifique...");
       }
       return con;
     } 

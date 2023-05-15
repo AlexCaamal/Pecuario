@@ -4,6 +4,7 @@
  */
 package main;
 
+import view.Login;
 import view.main;
 
 /**
@@ -12,7 +13,7 @@ import view.main;
  */
 public class principal {
     public static void main(String[] args) {
-        main mn = new main();
+        Login mn = new Login();
         mn.setVisible(true);
     }
     

@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>E:\DOCUMENTOS\NetBeansProjects\Pecuario\dist\PecuarioProyect.jar</jar>
-  <outfile>E:\DOCUMENTOS\NetBeansProjects\Pecuario\dist\PecuarioProyect.exe</outfile>
+  <jar>E:\DOCUMENTOS\NetBeansProjects\Pecuario\Ejecutable\PecuarioProyect.jar</jar>
+  <outfile>E:\DOCUMENTOS\NetBeansProjects\Pecuario\Ejecutable\BuenaAventura.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>E:\DOCUMENTOS\NetBeansProjects\Pecuario\dist\logo.ico</icon>
+  <icon>E:\DOCUMENTOS\NetBeansProjects\Pecuario\Ejecutable\logo.ico</icon>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
