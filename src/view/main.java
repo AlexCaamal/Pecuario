@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -33,17 +34,17 @@ public class main extends javax.swing.JFrame {
        this.btn_modDatos.setVisible(false);
        this.btn_modAlimen.setVisible(false);
        this.btn_modMort.setVisible(false);
-       this.LB_IdDespues.setVisible(false);
+       this.LB_IdDespues.setVisible(true);
        this.LB_ID.setVisible(false);
        this.lb_loteAnt.setVisible(false);
        this.lb_idLote.setVisible(false);
-       this.lb_cantAloHembras1.setVisible(false);
-       this.lb_cantAloMachos1.setVisible(false);
+       this.lb_cantAloHembras1.setVisible(true);
+       this.lb_cantAloMachos1.setVisible(true);
        ControladorMain mn = new ControladorMain(this);
-       ControladorLote lt = new ControladorLote(this);
        setIconImage(new ImageIcon(getClass().getResource("/img/logo2.jpeg")).getImage());
        this.Lote.setIconImage(new ImageIcon(getClass().getResource("/img/logo2.jpeg")).getImage());
        this.Lote.setTitle("Configuración General 'LOTES'");
+       ControladorLote lt = new ControladorLote(this);
     }
 
     /**
@@ -80,6 +81,9 @@ public class main extends javax.swing.JFrame {
         lb_advertencia2 = new javax.swing.JLabel();
         lb_advertencia1 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
+        JP_aviso = new javax.swing.JPanel();
+        lb_aviso = new javax.swing.JLabel();
+        btn_recargar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -158,12 +162,12 @@ public class main extends javax.swing.JFrame {
         LB_lote = new javax.swing.JLabel();
         lb_cantAloHembras1 = new javax.swing.JLabel();
         lb_cantAloMachos1 = new javax.swing.JLabel();
-        LB_IdDespues = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel29 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tb_main = new javax.swing.JTable();
         btn_VerGenral = new javax.swing.JButton();
+        LB_IdDespues = new javax.swing.JLabel();
 
         jPanel7.setBackground(new java.awt.Color(0, 0, 0));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -240,8 +244,8 @@ public class main extends javax.swing.JFrame {
 
         Calen_fechaNacimiento.setDateFormatString("dd/MM/yyyy");
         jPanel7.add(Calen_fechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 140, 30));
-        jPanel7.add(lb_idLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 50, 30));
-        jPanel7.add(lb_loteAnt, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, 50, 30));
+        jPanel7.add(lb_idLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 50, 30));
+        jPanel7.add(lb_loteAnt, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 300, 50, 30));
 
         lb_advertencia2.setForeground(new java.awt.Color(255, 255, 255));
         lb_advertencia2.setText("Una vez Ingresados ya NO se podran Modificar.");
@@ -265,6 +269,30 @@ public class main extends javax.swing.JFrame {
         );
 
         jPanel7.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 300, 290));
+
+        JP_aviso.setBackground(new java.awt.Color(0, 0, 0));
+
+        lb_aviso.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout JP_avisoLayout = new javax.swing.GroupLayout(JP_aviso);
+        JP_aviso.setLayout(JP_avisoLayout);
+        JP_avisoLayout.setHorizontalGroup(
+            JP_avisoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lb_aviso, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+        );
+        JP_avisoLayout.setVerticalGroup(
+            JP_avisoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JP_avisoLayout.createSequentialGroup()
+                .addComponent(lb_aviso, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(JP_aviso, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 240, -1, 30));
+
+        btn_recargar.setBackground(new java.awt.Color(153, 0, 0));
+        btn_recargar.setForeground(new java.awt.Color(255, 255, 255));
+        btn_recargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/recargar.png"))); // NOI18N
+        jPanel7.add(btn_recargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, 90, 30));
 
         javax.swing.GroupLayout LoteLayout = new javax.swing.GroupLayout(Lote.getContentPane());
         Lote.getContentPane().setLayout(LoteLayout);
@@ -322,6 +350,7 @@ public class main extends javax.swing.JFrame {
         jPanel6.add(txt_ventasMachos, new org.netbeans.lib.awtextra.AbsoluteConstraints(84, 93, 90, -1));
 
         txt_promedioMacho.setEditable(false);
+        txt_promedioMacho.setText("0.0");
         jPanel6.add(txt_promedioMacho, new org.netbeans.lib.awtextra.AbsoluteConstraints(84, 41, 90, -1));
 
         jLabel33.setForeground(new java.awt.Color(255, 255, 255));
@@ -365,6 +394,7 @@ public class main extends javax.swing.JFrame {
         jLabel24.setText("Ventas");
 
         txt_promedioHembra.setEditable(false);
+        txt_promedioHembra.setText("0.0");
 
         txt_vetntasHembra.setText("0");
 
@@ -439,6 +469,7 @@ public class main extends javax.swing.JFrame {
         txt_kgHembra.setText("0");
 
         txt_grsHembra.setEditable(false);
+        txt_grsHembra.setText("0.0");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -490,6 +521,7 @@ public class main extends javax.swing.JFrame {
         jPanel11.add(txt_kgMacho, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 91, -1));
 
         txt_grsMacho.setEditable(false);
+        txt_grsMacho.setText("0.0");
         jPanel11.add(txt_grsMacho, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 91, -1));
 
         btn_aceptedConfigAli.setBackground(new java.awt.Color(0, 0, 0));
@@ -519,6 +551,7 @@ public class main extends javax.swing.JFrame {
         jLabel40.setText("%");
 
         txt_promedioTotal1.setEditable(false);
+        txt_promedioTotal1.setText("0.0");
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -567,6 +600,7 @@ public class main extends javax.swing.JFrame {
         jPanel14.add(txt_INC, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 110, -1));
 
         txt_promedioINC.setEditable(false);
+        txt_promedioINC.setText("0.0");
         jPanel14.add(txt_promedioINC, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 110, -1));
 
         btn_acepConfigProd.setBackground(new java.awt.Color(0, 0, 0));
@@ -638,7 +672,11 @@ public class main extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Hembras");
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, -1, -1));
+
+        txt_cantHembras.setText("0");
         jPanel2.add(txt_cantHembras, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 80, -1));
+
+        txt_canMachos.setText("0");
         jPanel2.add(txt_canMachos, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, 92, -1));
 
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -734,9 +772,11 @@ public class main extends javax.swing.JFrame {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, -1, -1));
 
         lb_cantAloHembras.setForeground(new java.awt.Color(255, 255, 255));
+        lb_cantAloHembras.setText("0");
         jPanel1.add(lb_cantAloHembras, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 50, 30));
 
         lb_cantAloMachos.setForeground(new java.awt.Color(255, 255, 255));
+        lb_cantAloMachos.setText("0");
         jPanel1.add(lb_cantAloMachos, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 60, 50, 30));
 
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
@@ -759,13 +799,14 @@ public class main extends javax.swing.JFrame {
         jPanel1.add(LB_lote, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 60, 30));
 
         lb_cantAloHembras1.setForeground(new java.awt.Color(255, 255, 255));
+        lb_cantAloHembras1.setText("0");
         jPanel1.add(lb_cantAloHembras1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 30, 50, 30));
 
         lb_cantAloMachos1.setForeground(new java.awt.Color(255, 255, 255));
+        lb_cantAloMachos1.setText("0");
         jPanel1.add(lb_cantAloMachos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 60, 50, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(456, 0, 450, -1));
-        getContentPane().add(LB_IdDespues, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 40, 60, 30));
 
         jPanel9.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -802,12 +843,14 @@ public class main extends javax.swing.JFrame {
 
         btn_VerGenral.setBackground(new java.awt.Color(153, 0, 0));
         btn_VerGenral.setForeground(new java.awt.Color(255, 255, 255));
-        btn_VerGenral.setText("Ver Tabla General");
+        btn_VerGenral.setText("Ver Datos Generales");
         btn_VerGenral.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_VerGenralActionPerformed(evt);
             }
         });
+
+        LB_IdDespues.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -819,7 +862,10 @@ public class main extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                        .addComponent(LB_IdDespues, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                         .addComponent(btn_VerGenral)
                         .addGap(616, 616, 616))))
@@ -827,7 +873,11 @@ public class main extends javax.swing.JFrame {
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(LB_IdDespues, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
                 .addComponent(btn_VerGenral)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -923,6 +973,7 @@ public class main extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public com.toedter.calendar.JDateChooser Calen_fechaNacimiento;
+    public javax.swing.JPanel JP_aviso;
     public javax.swing.JLabel LB_ID;
     public javax.swing.JLabel LB_IdDespues;
     public javax.swing.JLabel LB_lote;
@@ -941,6 +992,7 @@ public class main extends javax.swing.JFrame {
     public javax.swing.JButton btn_modMort;
     public javax.swing.JButton btn_modProd;
     public javax.swing.JButton btn_nuevo;
+    public javax.swing.JButton btn_recargar;
     public javax.swing.JButton btn_registrarLote;
     public javax.swing.JComboBox<String> cbx_lotes;
     public javax.swing.JComboBox<String> cbx_tablas;
@@ -997,6 +1049,7 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JLabel lb_advertencia1;
     public javax.swing.JLabel lb_advertencia2;
+    public javax.swing.JLabel lb_aviso;
     public javax.swing.JLabel lb_cantAloHembras;
     public javax.swing.JLabel lb_cantAloHembras1;
     public javax.swing.JLabel lb_cantAloMachos;

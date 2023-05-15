@@ -60,6 +60,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         mn.tb_main.addMouseListener(this);
         mn.cbx_tablas.addActionListener(this);
         this.mn.btn_AceptarLote.addActionListener(this);
+        this.mn.btn_recargar.addActionListener(this);
          
         fecha = dia.format(formato);
         cargarUltimoLote();
@@ -69,8 +70,6 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         calcularPromedioTotal();
         calcularPromedioINC();
         calcularTotalHuevos();
-        calcularPromedioDiaHembra();
-        calcularPromedioDiaMacho();
         calcularGrsHembra();
         calcularGrsMacho();
     }
@@ -81,13 +80,22 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == mn.btn_Agregar){
+        if (e.getSource() == mn.btn_Agregar) {
             try {
-                if(insertarRegistro() && insertarExistencia() && insertarMortalidad() && 
-                    insertarAlimentos() && insertarProduccion() ){
+                if (insertarRegistro() && insertarExistencia() && insertarMortalidad()
+                        && insertarAlimentos() && insertarProduccion()) {
                     JOptionPane.showMessageDialog(mn, "Se ingreso Correctamente el Registro");
                     cargarDatosMain();
-                }else{
+                    mn.btn_Agregar.setEnabled(false);
+                    mn.btn_acepConfigProd.setVisible(false);
+                    mn.btn_aceptedConfigAli.setVisible(false);
+                    mn.btn_configMort.setVisible(false);
+                    mn.btn_aceptGeneral.setVisible(false);
+                    mn.btn_modDatos.setVisible(false);
+                    mn.btn_modMort.setVisible(false);
+                    mn.btn_modAlimen.setVisible(false);
+                    mn.btn_modProd.setVisible(false);
+                } else {
                     JOptionPane.showMessageDialog(mn, "Ocurrio un problema. Verifique");
                 }
             } catch (Exception ex) {
@@ -97,6 +105,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         }else if(e.getSource() == mn.btn_VerGenral){
             try {
                 fecha = dia.format(formato);
+                calcularEdad();
                 cargarDatosMain();
                 limpiarCampos();
                 cargarDatosTxtField();
@@ -246,13 +255,18 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
              if(verificarExiteLote()){
                   JOptionPane.showMessageDialog(mn, "Digite un lote valido o Registre uno Nuevo","Lote Invalido", JOptionPane.ERROR_MESSAGE);
               }else{
-                  String lote = mn.txt_lote.getText();
+                 String lote = mn.txt_lote.getText();
                  mn.LB_lote.setText(lote);
+                 limpiarCampos();
+                 buscarIdDespues();
+                 calcularEdad();
                  cargarDatosMain();
                  cargarUltimoLote();
+                 cargarDatosTxtField();
+                 ActualizarVista();
                  mn.Lote.dispose();
               }
-        }
+      }
     }
 
     @Override
@@ -438,6 +452,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     }
     
     public void cargarDatos(){
+        String lote = mn.LB_lote.getText();
         DefaultTableModel modeloTabla = new DefaultTableModel();
         modeloTabla.setRowCount(0);
         PreparedStatement ps;
@@ -460,9 +475,11 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             Connection con = conexion.establecerConnection();
             String sql = "SELECT re.fecha, ex.edad, ex.CantHembras, ex.CanMachos "
                     + "FROM registros re "
-                    + "INNER JOIN  existencia ex on re.id_registro = ex.id_registro ";
+                    + "INNER JOIN  existencia ex on re.id_registro = ex.id_registro "
+                    + "WHERE re.id_lote = ?";
             
                 ps = con.prepareStatement(sql);
+                ps.setString(1, lote);
                 rs = ps.executeQuery();
                 rsmd = rs.getMetaData();
                 columnas = rsmd.getColumnCount();
@@ -479,6 +496,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     }
     
     public void cargarMortalidad(){
+        String lote = mn.LB_lote.getText();
         DefaultTableModel modeloTabla = new DefaultTableModel();
         modeloTabla.setRowCount(0);
         PreparedStatement ps;
@@ -507,9 +525,11 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             String sql = "SELECT re.fecha, mo.diaHembra, mo.promedioHembra, mo.selHembra, mo.ventasHembras, mo.diaMachos, mo.promedioMachos, "
                     + "mo.selMachos, mo.ventasMachos "
                     + "FROM registros re "
-                    + "INNER JOIN mortalidad mo on re.id_registro = mo.id_registro ";
+                    + "INNER JOIN mortalidad mo on re.id_registro = mo.id_registro "
+                    + "WHERE re.id_lote = ?";
             
                 ps = con.prepareStatement(sql);
+                ps.setString(1, lote);
                 rs = ps.executeQuery();
                 rsmd = rs.getMetaData();
                 columnas = rsmd.getColumnCount();
@@ -525,7 +545,8 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         }
     }
     
-    public void cargarAlimentos(){
+    public void cargarAlimentos() {
+        String lote = mn.LB_lote.getText();
         DefaultTableModel modeloTabla = new DefaultTableModel();
         modeloTabla.setRowCount(0);
         PreparedStatement ps;
@@ -549,9 +570,11 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             Connection con = conexion.establecerConnection();
             String sql = "SELECT re.fecha, ali.kgHembras, ali.grsHembras, ali.kgMachos, ali.grsMachos "
                     + "FROM registros re "
-                    + "INNER JOIN alimentos ali on re.id_registro = ali.id_registro ";
+                    + "INNER JOIN alimentos ali on re.id_registro = ali.id_registro "
+                    + "WHERE re.id_lote = ?";
             
                 ps = con.prepareStatement(sql);
+                ps.setString(1, lote);
                 rs = ps.executeQuery();
                 rsmd = rs.getMetaData();
                 columnas = rsmd.getColumnCount();
@@ -568,6 +591,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     }
     
     public void cargarProduccion(){
+        String lote = mn.LB_lote.getText();
         DefaultTableModel modeloTabla = new DefaultTableModel();
         modeloTabla.setRowCount(0);
         PreparedStatement ps;
@@ -593,9 +617,11 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             Connection con = conexion.establecerConnection();
             String sql = "SELECT re.fecha, pro.incubable, pro.promedioInc, pro.comercio, pro.roto, pro.totalHuevos, pro.promedioTotal "
                     + "FROM registros re "
-                    + "INNER JOIN produccion pro on re.id_registro = pro.id_registro ";
+                    + "INNER JOIN produccion pro on re.id_registro = pro.id_registro "
+                    + "WHERE re.id_lote = ?";
             
                 ps = con.prepareStatement(sql);
+                ps.setString(1, lote);
                 rs = ps.executeQuery();
                 rsmd = rs.getMetaData();
                 columnas = rsmd.getColumnCount();
@@ -638,22 +664,38 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     
     public void cargarUltimoLote(){
         try {
+            String loteVista = "";
             String lote = mn.LB_lote.getText();
             if (lote.equals("")) {
+                loteVista = obtenerVista();
+                String lt = "";
                 PreparedStatement ps;
                 ResultSet rs;
                 Connection con = conexion.establecerConnection();
-                ps = con.prepareStatement("SELECT MAX(lote) as lote, HembrasAlojadas, MachosAlojados FROM lote");
+                ps = con.prepareStatement("SELECT lote as lote, HembrasAlojadas, MachosAlojados FROM lote WHERE lote = ?");
+                ps.setString(1, loteVista);
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     mn.LB_lote.setText(rs.getString("lote"));
-                    mn.lb_cantAloHembras.setText(rs.getString("HembrasAlojadas"));
-                    mn.lb_cantAloMachos.setText(rs.getString("MachosAlojados"));
-                    mn.lb_cantAloHembras1.setText(rs.getString("HembrasAlojadas"));
-                    mn.lb_cantAloMachos1.setText(rs.getString("MachosAlojados"));
+                    lt = rs.getString("lote");
                 }
                 rs.close();
                 con.close();
+                PreparedStatement ps2;
+                ResultSet rs2;
+                Connection con2 = conexion.establecerConnection();
+                ps2 = con2.prepareStatement("SELECT HembrasAlojadas, MachosAlojados FROM lote WHERE lote = ? ");
+                ps2.setString(1, lt);
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    mn.lb_cantAloHembras.setText(rs2.getString("HembrasAlojadas"));
+                    mn.lb_cantAloMachos.setText(rs2.getString("MachosAlojados"));
+                    mn.lb_cantAloHembras1.setText(rs2.getString("HembrasAlojadas"));
+                    mn.lb_cantAloMachos1.setText(rs2.getString("MachosAlojados"));
+                }
+                rs2.close();
+                con2.close();
+                
             }else{
                 PreparedStatement ps1;
                 ResultSet rs1;
@@ -665,6 +707,8 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 while (rs1.next()) {
                     hembra = rs1.getString("HembrasAlojadas");
                    Macho = rs1.getString("MachosAlojados");
+                   mn.lb_cantAloHembras1.setText(rs1.getString("HembrasAlojadas"));
+                   mn.lb_cantAloMachos1.setText(rs1.getString("MachosAlojados"));
                 } 
                 if(hembra == ""){
                     mn.lb_cantAloHembras.setText(hembra);
@@ -685,6 +729,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         PreparedStatement ps;
         String lote = mn.LB_lote.getText();
         ResultSet rs;
+        String fechSql = "";
         try {
             Connection con = conexion.establecerConnection();
             String sql = "SELECT re.id_registro as id_registro, re.fecha as fecha, ex.edad as edad, ex.CantHembras, ex.CanMachos, "
@@ -706,6 +751,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             while (rs.next()) {
                 mn.LB_ID.setText(rs.getString("id_registro"));
                 mn.txt_fecha.setText(rs.getString("fecha"));
+                fechSql = rs.getString("fecha");
                 mn.txtEdad.setText(rs.getString("edad"));
                 mn.txt_cantHembras.setText(rs.getString("CantHembras"));
                 mn.txt_canMachos.setText(rs.getString("CanMachos"));
@@ -728,7 +774,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 mn.txt_roto.setText(rs.getString("roto"));
             }rs.close();con.close();
             
-            if(mn.txt_fecha.getText().isEmpty()){
+            if(fechSql.equals("")){
                 mn.txt_fecha.setText(fecha);
                 calcularCantidadHMMortalidad();
                 mn.btn_Agregar.setEnabled(true);
@@ -746,24 +792,38 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     
     public void calcularEdad() {
         try{
-            int lote = Integer.parseInt(mn.LB_lote.getText());
-            int idAntes = Integer.parseInt(mn.LB_IdDespues.getText());
+            String lote = mn.LB_lote.getText();
+            int idAntes =0;
             int edad = 0; int edadMax = 0; 
-            if(idAntes == 0){
+            if((idAntes-1)== 0){
                 mn.txtEdad.setText("24");
             } else {
                 PreparedStatement ps;
                 ResultSet rs;
                 Connection con = conexion.establecerConnection();
-                String sqlInsertar = "SELECT edad FROM existencia "
-                        + "WHERE id_registro = ?";
+                String sqlInsertar = "SELECT MAX(re.id_registro) as MaxEdadIdRegistro FROM registros re "
+                            + "INNER JOIN existencia ex on re.id_registro = ex.id_registro "
+                            + "WHERE re.id_lote = ?";
                 ps = con.prepareStatement(sqlInsertar);
-                ps.setInt(1, (idAntes - 1));
+                ps.setString(1,lote);
                 rs = ps.executeQuery();
                 while (rs.next()) {
-                    edad = rs.getInt("edad");
-                }
-                if(edad >= 1 && edad < 6){
+                    idAntes = rs.getInt("MaxEdadIdRegistro");
+                }rs.close();con.close();
+                PreparedStatement ps2;
+                ResultSet rs2;
+                Connection con2 = conexion.establecerConnection();
+                String sqlBuscarEdad = "SELECT ex.edad FROM existencia ex WHERE ex.id_registro = ?";
+                ps2 = con2.prepareStatement(sqlBuscarEdad);
+                ps2.setInt(1,idAntes);
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    edad = rs2.getInt("edad");
+                }rs2.close();con2.close();
+                
+                if(edad == 0){
+                    mn.txtEdad.setText("24");
+                }else if(edad >= 1 && edad < 6){
                     mn.txtEdad.setText(""+(edad+1));
                 }else if(!(edad >= 1 && edad <=6)){
                     mn.txtEdad.setText("1");
@@ -773,9 +833,9 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                     Connection con1 = conexion.establecerConnection();
                     String sql = "SELECT MAX(edad) as MaxEdad FROM registros re "
                             + "INNER JOIN existencia ex on re.id_registro = ex.id_registro "
-                            + "WHERE id_lote = ?";
+                            + "WHERE re.id_lote = ?";
                     ps1 = con.prepareStatement(sql);
-                      ps1.setInt(1, lote);
+                      ps1.setString(1, lote);
                     rs1 = ps1.executeQuery();
                     while (rs1.next()) {
                         edadMax = rs1.getInt("MaxEdad");
@@ -792,8 +852,13 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
          if(mn.txt_diaHembra.getText().isEmpty()){
             mn.txt_promedioHembra.setText("0.0");
         }else {
+            Float cantVivosAnterior = 0f;
             Float hembrasMuertas = Float.parseFloat(mn.txt_diaHembra.getText());
-            Float cantVivosAnterior = Float.parseFloat(mn.lb_cantAloHembras1.getText());
+            if (mn.lb_cantAloHembras1.getText().equals("") || mn.lb_cantAloHembras1.getText().isEmpty()) {
+                cantVivosAnterior = 0f;
+            } else {
+                cantVivosAnterior = Float.parseFloat(mn.lb_cantAloHembras1.getText());
+            }
             Float result = hembrasMuertas / cantVivosAnterior * 100;
             mn.txt_promedioHembra.setText("" + result);
         }
@@ -803,8 +868,13 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         if(mn.txt_diaMacho.getText().isEmpty()){
             mn.txt_promedioMacho.setText("0.0");
         } else {
+            Float cantVivosAnterior = 0f;
             Float hembrasMuertas = Float.parseFloat(mn.txt_diaMacho.getText());
-            Float cantVivosAnterior = Float.parseFloat(mn.lb_cantAloMachos1.getText());
+            if(mn.lb_cantAloMachos1.getText().isEmpty()){
+             cantVivosAnterior = 0f;
+            }else{
+               cantVivosAnterior = Float.parseFloat(mn.lb_cantAloMachos1.getText());
+            }
             Float result = hembrasMuertas / cantVivosAnterior * 100;
             mn.txt_promedioMacho.setText("" + result);
         }
@@ -880,6 +950,12 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     public void buscarIdDespues(){
         PreparedStatement ps;
         ResultSet rs;
+        String lote = mn.LB_lote.getText();
+        if(lote == null){
+            lote = "";
+        }else{
+            lote = mn.LB_lote.getText();
+        }
         try {
             Connection con = conexion.establecerConnection();
             String sql = "SELECT MAX(id_registro) as max FROM registros";
@@ -1178,14 +1254,23 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     }
     
     public void calcularCantidadHMMortalidad(){
-        int id = 0; 
-        if(mn.LB_IdDespues.getText().isEmpty()){
+        int id = 0; int vivosH = 0, vivosM = 0;
+        String lote = mn.LB_lote.getText();
+         if(lote == null){
+            lote = "";
+            
+        }else{
+            vivosH = Integer.parseInt(mn.lb_cantAloHembras.getText());
+            vivosM = Integer.parseInt(mn.lb_cantAloMachos.getText());
+            lote = mn.LB_lote.getText();
+        }
+        if(mn.LB_IdDespues.getText().isEmpty() ){
             id = 0;
         }else{
             id = Integer.parseInt(mn.LB_IdDespues.getText())-1;
         }
         int muerteH = 0, muerteM = 0;
-        int vivosH = 0, vivosM = 0;
+        
         if(id == 0){
             mn.txt_cantHembras.setText(mn.lb_cantAloHembras.getText());
             mn.txt_canMachos.setText(mn.lb_cantAloMachos.getText());
@@ -1194,9 +1279,12 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 PreparedStatement ps;
                 ResultSet rs;
                 Connection con = conexion.establecerConnection();
-                String sqlInsertar = "SELECT diaHembra, selHembra,ventasHembras, diaMachos, selMachos, ventasMachos FROM mortalidad WHERE id_registro = ?";
+                String sqlInsertar = "SELECT SUM(diaHembra) AS diaHembra, SUM(selHembra) AS selHembra, SUM(ventasHembras) AS ventasHembras, SUM(diaMachos) AS diaMachos, "
+                        + "SUM(selMachos) AS selMachos, SUM(ventasMachos) AS ventasMachos  FROM registros re "
+                        + "INNER JOIN mortalidad mo ON re.id_registro = mo.id_registro "
+                        + "WHERE re.id_lote = ?";
                 ps = con.prepareStatement(sqlInsertar);
-                ps.setInt(1, id);
+                ps.setString(1, lote);
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     muerteH = (rs.getInt("diaHembra") + rs.getInt("selHembra") + rs.getInt("ventasHembras"));
@@ -1207,27 +1295,67 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
             } catch (Exception e) {
                 System.out.println("error calcularCantidadHMMortalidad " + e.getMessage());
             }
-            
-            try {
+//            try {
+//                PreparedStatement ps2;
+//                ResultSet rs2;
+//                Connection con2 = conexion.establecerConnection();
+//                String sqlInsertar = "SELECT ex.CanMachos, ex.CantHembras FROM registros re "
+//                        + "INNER JOIN existencia ex "
+//                        + "WHERE re.id_lote = ? and ex.id_registro = ?";
+//                ps2 = con2.prepareStatement(sqlInsertar);
+//                ps2.setString(1, lote);
+//                ps2.setInt(2, (id-1));
+//                rs2 = ps2.executeQuery();
+//                while (rs2.next()) {
+//                    System.out.println("jo");
+//                    vivosH = rs2.getInt("CantHembras") ;
+//                    mn.lb_cantAloHembras1.setText(rs2.getString("CantHembras"));
+//                    mn.lb_cantAloMachos1.setText(rs2.getString("CanMachos"));
+//                    vivosM = rs2.getInt("CanMachos");
+//                } rs2.close(); con2.close();
+//            } catch (Exception e) {
+//                System.out.println("error calcularCantidadHMMortalidad " + e.getMessage());
+//            }
+            mn.txt_cantHembras.setText(""+(vivosH - muerteH));
+            mn.txt_canMachos.setText(""+(vivosM - muerteM));
+        }
+    }
+    
+    public String obtenerVista(){
+        String loteVista = "";
+        try {
+            PreparedStatement ps;
+                ResultSet rs;
+                Connection con = conexion.establecerConnection();
+                String sqlInsertar = "SELECT loteSelected FROM vista";
+                ps = con.prepareStatement(sqlInsertar);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    loteVista = rs.getString("loteSelected");
+                }
+                rs.close();
+                con.close();
+                return loteVista;
+        } catch (Exception e) {
+            System.out.println("ERROR EN obtenerVista ");
+        }
+        return loteVista;
+    }
+    
+    public void ActualizarVista(){
+        String loteVista = mn.txt_lote.getText();
+        try {
                 PreparedStatement ps;
                 ResultSet rs;
                 Connection con = conexion.establecerConnection();
-                String sqlInsertar = "SELECT CanMachos, CantHembras FROM existencia WHERE id_registro = ?";
+                String sqlInsertar = "UPDATE vista SET loteSelected = ?";
                 ps = con.prepareStatement(sqlInsertar);
-                ps.setInt(1, (id-1));
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    System.out.println("jo");
-                    vivosH = rs.getInt("CantHembras") ;
-                    mn.lb_cantAloHembras1.setText(rs.getString("CantHembras"));
-                    mn.lb_cantAloMachos1.setText(rs.getString("CanMachos"));
-                    vivosM = rs.getInt("CanMachos");
-                } rs.close(); con.close();
-            } catch (Exception e) {
-                System.out.println("error calcularCantidadHMMortalidad " + e.getMessage());
-            }
-            mn.txt_cantHembras.setText(""+(vivosH - muerteH));
-            mn.txt_canMachos.setText(""+(vivosM - muerteM));
+                ps.setString(1, loteVista);
+                ps.executeUpdate();
+                ps.close();
+                con.close();
+        } catch (Exception e) {
+            System.out.println("ERROR EN actualizarVista ");
         }
     }
 }

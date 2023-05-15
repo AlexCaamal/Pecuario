@@ -5,6 +5,7 @@
 package Controlador;
 
 import Models.conexion;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -38,17 +39,14 @@ public class ControladorLote implements ActionListener, KeyListener{
         this.mn.btn_editarLote.addActionListener(this);
         this.mn.btn_registrarLote.addActionListener(this);
         this.mn.txt_lote.addKeyListener(this);
-        this.mn.txt_fecha.addKeyListener(this);
         this.mn.txt_HembrasIniciadas.addKeyListener(this);
         this.mn.txt_MachosIniciados.addKeyListener(this);
         this.mn.txt_HembrasAlojadas.addKeyListener(this);
         this.mn.txt_MachosAlojados.addKeyListener(this);
         this.mn.cbx_lotes.addActionListener(this);
+        mn.btn_recargar.addActionListener(this);
         mn.btn_config.addActionListener(this);
-        cargarLotes();
-        cargarUltimos();
-        verAdvertencias(false, true);
-        botones(true, true, true, false, false);
+        verificarSiHayLote();
     }
 
     @Override
@@ -66,6 +64,7 @@ public class ControladorLote implements ActionListener, KeyListener{
               verAdvertencias(true, true);
               botones(false, true, false, false, true);
               mn.btn_nuevo.setText("Cancelar");
+              
           }else if(mn.btn_nuevo.getText().equals("Cancelar")){
               verAdvertencias(false, false);
               cargarUltimos();
@@ -75,22 +74,41 @@ public class ControladorLote implements ActionListener, KeyListener{
           
       }else if(e.getSource() == mn.btn_editarLote){
           ActualizarLote();
+          
+      }else if(e.getSource() == mn.btn_recargar){
+         cargarLotes();
+          
       }else if(e.getSource() == mn.btn_registrarLote){
           if(verificarExiteLote()){
+              mn.lb_aviso.setText("Registro Exitoso");
+              mn.JP_aviso.setBackground(Color.green);
               registrarLote();
+              botones(true, true, false, false, false);
+              
           }else{
               JOptionPane.showMessageDialog(mn, "El lote ya se encuentra Registrado");
           }
+          
       }else if(e.getSource() == mn.cbx_lotes){
-          cargarLotes();
-          limpiar();
           cargarUltimos();
+          
       }else if(e.getSource() == mn.btn_config){
-          cargarUltimos();
-          botones(true, true, true, false, false);
-          mn.Lote.setSize(450, 450);
-          mn.Lote.setLocationRelativeTo(mn);
-          mn.Lote.setVisible(true);
+          String lote = mn.txt_lote.getText();
+          String lbLote = mn.LB_lote.getText();
+           if (lote == "" || lbLote == "") {
+               botones(true, true, true, false, true);
+               mn.btn_nuevo.setText("Cancelar");
+               mn.Lote.setSize(450, 450);
+               mn.Lote.setLocationRelativeTo(mn);
+               mn.Lote.setVisible(true);
+           }else{
+               cargarUltimos();
+               botones(true, true, true, false, false);
+               mn.Lote.setSize(450, 450);
+               mn.Lote.setLocationRelativeTo(mn);
+               mn.Lote.setVisible(true);
+           }
+         
        }
     }
 
@@ -104,13 +122,29 @@ public class ControladorLote implements ActionListener, KeyListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if(e.getSource() == mn.txt_lote || e.getSource() == mn.txt_fecha ||e.getSource() == mn.txt_HembrasIniciadas || 
+        if(e.getSource() == mn.txt_lote ||e.getSource() == mn.txt_HembrasIniciadas || 
            e.getSource() == mn.txt_MachosIniciados){
             if(mn.btn_nuevo.getText().equals("Nuevo")){
                 botones(true, true, true, true, false);
             }else if(mn.btn_nuevo.getText().equals("Cancelar")){
-                 botones(true, true, false, false, true);
+                 botones(false, true, false, false, true);
             }
+        }
+    }
+    
+    public void verificarSiHayLote() {
+        String lbLote = mn.LB_lote.getText();
+        String txtLote = mn.txt_lote.getText();
+        if (lbLote == "" || txtLote == "") {
+            mn.lb_cantAloHembras1.setText("0");
+            mn.lb_cantAloMachos1.setText("0");
+            mn.btn_config.setBackground(Color.orange);
+            JOptionPane.showMessageDialog(mn, "Elija o Registre un Lote...", "Elección de Lote", JOptionPane.ERROR_MESSAGE);
+        } else {
+            cargarLotes();
+            cargarUltimos();
+            verAdvertencias(false, true);
+            botones(true, true, true, false, false);
         }
     }
     
@@ -158,12 +192,17 @@ public class ControladorLote implements ActionListener, KeyListener{
                 i++;
             }rs.close();con.close();
         } catch (Exception er) {
-            System.err.println("Error en cbx: " + er.toString());
+            System.err.println("Error en cbx: " + er.getMessage());
         }
     }
     
     public void cargarUltimos(){
         String lote = mn.cbx_lotes.getSelectedItem().toString();
+        if(lote == null){
+            lote = "";
+        }else{
+            lote = mn.cbx_lotes.getSelectedItem().toString();
+        }
         try {
             PreparedStatement ps;
             ResultSet rs;
@@ -234,7 +273,7 @@ public class ControladorLote implements ActionListener, KeyListener{
                 ps.setInt(6, MachosAlojados);
                 ps.executeUpdate();
                 con.close();ps.close();
-                JOptionPane.showMessageDialog(mn, "Se registro correctamente!!");
+               // JOptionPane.showMessageDialog(mn, "Se registro correctamente!!");
             } catch (Exception er) {
                 System.err.println("Error en registrarLote: " + er.toString());
                 JOptionPane.showMessageDialog(mn, "Error. Verifique que los datos estes correctos...");
@@ -256,10 +295,12 @@ public class ControladorLote implements ActionListener, KeyListener{
             while (rs.next()) {
                 resultLote = rs.getString("lote");
             }
+            return true;
         } catch (Exception e) {
             System.out.println("error en UpdateRegistro " + e.getMessage());
+            return false;
         }
-        return resultLote.equals("");
+        
     }
     
     public void ActualizarLote(){
@@ -325,7 +366,6 @@ public class ControladorLote implements ActionListener, KeyListener{
     }
   
     public void UpdateRegistro(String loteActual, String loteAnterior) {
-        String fecha = mn.txt_fecha.getText();
         int idRegistro = 0;
         PreparedStatement ps;
         ResultSet rs;
