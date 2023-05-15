@@ -256,6 +256,8 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                   JOptionPane.showMessageDialog(mn, "Digite un lote valido o Registre uno Nuevo","Lote Invalido", JOptionPane.ERROR_MESSAGE);
               }else{
                  String lote = mn.txt_lote.getText();
+                 mn.lb_aviso.setVisible(false);
+                 mn.JP_aviso.setVisible(false);
                  mn.LB_lote.setText(lote);
                  limpiarCampos();
                  buscarIdDespues();

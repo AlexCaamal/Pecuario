@@ -46,6 +46,7 @@ public class ControladorLote implements ActionListener, KeyListener{
         this.mn.cbx_lotes.addActionListener(this);
         mn.btn_recargar.addActionListener(this);
         mn.btn_config.addActionListener(this);
+        mn.btn_eliminarLote.addActionListener(this);
         verificarSiHayLote();
     }
 
@@ -79,7 +80,9 @@ public class ControladorLote implements ActionListener, KeyListener{
          cargarLotes();
           
       }else if(e.getSource() == mn.btn_registrarLote){
-          if(verificarExiteLote()){
+          if(!verificarExiteLote()){
+              mn.lb_aviso.setVisible(true);
+              mn.JP_aviso.setVisible(true);
               mn.lb_aviso.setText("Registro Exitoso");
               mn.JP_aviso.setBackground(Color.green);
               registrarLote();
@@ -102,14 +105,23 @@ public class ControladorLote implements ActionListener, KeyListener{
                mn.Lote.setLocationRelativeTo(mn);
                mn.Lote.setVisible(true);
            }else{
-               cargarUltimos();
+               cargarUltimoToLotes();
                botones(true, true, true, false, false);
                mn.Lote.setSize(450, 450);
                mn.Lote.setLocationRelativeTo(mn);
                mn.Lote.setVisible(true);
            }
          
-       }
+       }else if(e.getSource() == mn.btn_eliminarLote){
+          if (verificarExiteLote()) {
+            if (EliminarLote()) {
+                limpiar();
+                JOptionPane.showMessageDialog(mn, "Se elimino correctamente");
+            }
+          }else{
+            JOptionPane.showMessageDialog(mn, "Lote no encontrado en la Base de Datos.");
+          }
+      }
     }
 
     @Override
@@ -142,7 +154,7 @@ public class ControladorLote implements ActionListener, KeyListener{
             JOptionPane.showMessageDialog(mn, "Elija o Registre un Lote...", "Elección de Lote", JOptionPane.ERROR_MESSAGE);
         } else {
             cargarLotes();
-            cargarUltimos();
+            cargarUltimoToLotes();
             verAdvertencias(false, true);
             botones(true, true, true, false, false);
         }
@@ -154,9 +166,14 @@ public class ControladorLote implements ActionListener, KeyListener{
     }
     
     public void botones(boolean btn_AceptarLote,boolean btn_nuevo,boolean btn_eliminarLote,boolean btn_editarLote,boolean btn_registrarLote){
+        if(!(mn.txt_lote.getText().equals("") && btn_editarLote == false)){
+            this.mn.btn_eliminarLote.setVisible(true);
+        }else{
+            this.mn.btn_eliminarLote.setVisible(btn_editarLote);
+        }
+        this.mn.btn_editarLote.setVisible(btn_editarLote);
         this.mn.btn_AceptarLote.setVisible(btn_AceptarLote);
         this.mn.btn_nuevo.setVisible(btn_nuevo);
-        this.mn.btn_editarLote.setVisible(btn_editarLote);
         this.mn.btn_registrarLote.setVisible(btn_registrarLote);
     }
     
@@ -232,6 +249,42 @@ public class ControladorLote implements ActionListener, KeyListener{
         }
     }
     
+        public void cargarUltimoToLotes(){
+        String lote = mn.LB_lote.getText();
+        if(lote == null){
+            lote = "";
+        }else{
+            lote = mn.LB_lote.getText();
+        }
+        try {
+            PreparedStatement ps;
+            ResultSet rs;
+            Connection con = conexion.establecerConnection();
+            ps = con.prepareStatement("SELECT id_lote, lote, FechaDeNacimiento, HembrasInicio, MachosInicio, HembrasAlojadas, MachosAlojados FROM lote WHERE lote = ?");
+            ps.setString(1, lote);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                mn.lb_idLote.setText(rs.getString("id_lote"));
+                mn.txt_lote.setText(rs.getString("lote"));
+                mn.lb_loteAnt.setText(rs.getString("lote"));
+                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                Date fechaNacimiento = formato.parse((rs.getString("FechaDeNacimiento")));
+                try {
+                    mn.Calen_fechaNacimiento.setDate(fechaNacimiento);
+                } catch (Exception ev) {
+                    System.out.println("error en jCalendar " + ev.getMessage());
+                }
+                String fecha = dateFormat.format(mn.Calen_fechaNacimiento.getCalendar().getTime());
+                mn.txt_HembrasIniciadas.setText(rs.getString("HembrasInicio"));
+                mn.txt_MachosIniciados.setText(rs.getString("MachosInicio"));
+                mn.txt_HembrasAlojadas.setText(rs.getString("HembrasAlojadas"));
+                mn.txt_MachosAlojados.setText(rs.getString("MachosAlojados"));
+            }rs.close();con.close();
+        } catch (Exception er) {
+            System.err.println("Error en cargarUltimoTXT: " + er.toString());
+        }
+    }
+    
     public void buscarUltimoLote(){
         try {
             PreparedStatement ps;
@@ -273,7 +326,6 @@ public class ControladorLote implements ActionListener, KeyListener{
                 ps.setInt(6, MachosAlojados);
                 ps.executeUpdate();
                 con.close();ps.close();
-               // JOptionPane.showMessageDialog(mn, "Se registro correctamente!!");
             } catch (Exception er) {
                 System.err.println("Error en registrarLote: " + er.toString());
                 JOptionPane.showMessageDialog(mn, "Error. Verifique que los datos estes correctos...");
@@ -295,7 +347,7 @@ public class ControladorLote implements ActionListener, KeyListener{
             while (rs.next()) {
                 resultLote = rs.getString("lote");
             }
-            return true;
+            return resultLote != "";
         } catch (Exception e) {
             System.out.println("error en UpdateRegistro " + e.getMessage());
             return false;
@@ -378,6 +430,28 @@ public class ControladorLote implements ActionListener, KeyListener{
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println("error en UpdateRegistro " + e.getMessage());
+        }
+    }
+
+    public boolean EliminarLote() {
+        String lote = mn.txt_lote.getText();
+        PreparedStatement ps;
+        ResultSet rs;
+        int op = JOptionPane.showConfirmDialog(mn, "¿Desea Eliminar el Lote "+lote+"?");
+        if (op == 0 && (lote != "")) {
+            try {
+                Connection con = conexion.establecerConnection();
+                String sqlInsertar = "DELETE FROM lote WHERE lote = ?";
+                ps = con.prepareStatement(sqlInsertar);
+                ps.setString(1, lote);
+                ps.executeUpdate();
+                return true;
+            } catch (Exception e) {
+                System.out.println("error en UpdateRegistro " + e.getMessage());
+                return false;
+            }
+        }else{
+            return false;
         }
     }
 }
