@@ -21,7 +21,7 @@ public class Login extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         txt_fecha.setVisible(false);
         this.setTitle(" Login ");
-        setIconImage(new ImageIcon(getClass().getResource("/img/logo2.jpeg")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/img/logoBioMaster.jpg")).getImage());
     }
 
     @SuppressWarnings("unchecked")
@@ -34,30 +34,31 @@ public class Login extends javax.swing.JFrame {
         txt_user = new javax.swing.JTextField();
         btn_Cancelar = new javax.swing.JButton();
         btn_Ingresar = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         txt_Contra = new javax.swing.JPasswordField();
         txt_fecha = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Login", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Comic Sans MS", 3, 14))); // NOI18N
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Comic Sans MS", 3, 14)); // NOI18N
         jLabel1.setText("Usuario: ");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Comic Sans MS", 3, 14)); // NOI18N
         jLabel2.setText("Contraseña: ");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, -1, -1));
 
         txt_user.setFont(new java.awt.Font("Comic Sans MS", 3, 14)); // NOI18N
-        jPanel1.add(txt_user, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 171, -1));
+        jPanel1.add(txt_user, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, 171, -1));
 
         btn_Cancelar.setFont(new java.awt.Font("Comic Sans MS", 3, 14)); // NOI18N
         btn_Cancelar.setText("Salir");
-        jPanel1.add(btn_Cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 210, -1, -1));
+        jPanel1.add(btn_Cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, -1, -1));
 
         btn_Ingresar.setFont(new java.awt.Font("Comic Sans MS", 3, 14)); // NOI18N
         btn_Ingresar.setText("Ingresar");
@@ -66,19 +67,19 @@ public class Login extends javax.swing.JFrame {
                 btn_IngresarActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_Ingresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 210, -1, -1));
-
-        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/login.png"))); // NOI18N
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 280, 160));
+        jPanel1.add(btn_Ingresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, -1, -1));
 
         txt_Contra.setFont(new java.awt.Font("Comic Sans MS", 3, 14)); // NOI18N
-        jPanel1.add(txt_Contra, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, 170, -1));
+        jPanel1.add(txt_Contra, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 220, 170, -1));
 
         txt_fecha.setFont(new java.awt.Font("Comic Sans MS", 3, 12)); // NOI18N
         txt_fecha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPanel1.add(txt_fecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 80, -1));
+        jPanel1.add(txt_fecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 80, -1));
+
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logoBioMaster.jpg"))); // NOI18N
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 290, 220));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -89,7 +90,7 @@ public class Login extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 

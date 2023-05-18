@@ -82,7 +82,10 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == mn.btn_Agregar) {
             try {
-                if (insertarRegistro() && insertarExistencia() && insertarMortalidad()
+                if(ValidarVacios()){
+                    
+                }else{
+                    if (insertarRegistro() && insertarExistencia() && insertarMortalidad()
                         && insertarAlimentos() && insertarProduccion()) {
                     JOptionPane.showMessageDialog(mn, "Se ingreso Correctamente el Registro");
                     cargarDatosMain();
@@ -97,6 +100,7 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                     mn.btn_modProd.setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(mn, "Ocurrio un problema. Verifique");
+                }
                 }
             } catch (Exception ex) {
                 System.out.println("error en btn_Agregar "+ex.getMessage());
@@ -394,13 +398,14 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         String lote = mn.LB_lote.getText();
         int columnas;
         JTableHeader th;
-        Color cr = new Color(153,0,0);
+        Color cr = new Color(255,255,255);
+        Color crF = new Color(102,0,102);
         th = mn.tb_main.getTableHeader();
         final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setBorder(null);
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
         th.setDefaultRenderer(renderer);
-        th.setForeground(Color.WHITE);
+        th.setForeground(crF);
         th.setBackground(cr);
         th.setBorder(null);
         modeloTabla.addColumn("Fecha");
@@ -415,11 +420,11 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         modeloTabla.addColumn("VentasMachos");
         modeloTabla.addColumn("kgHembras");
         modeloTabla.addColumn("kgMachos");
-        modeloTabla.addColumn("Total Huevos");
         modeloTabla.addColumn("Incubables");
-        modeloTabla.addColumn("Huevos rotos");
+        modeloTabla.addColumn("Rotos");
+        modeloTabla.addColumn("Total Huevos");
         mn.tb_main.setModel(modeloTabla);
-        int[] ancho = {100, 80, 100, 100, 120, 100, 110, 120, 100, 100, 100, 100, 100, 100, 100};
+        int[] ancho = {90, 70, 120, 120, 140, 100, 110, 130, 100, 100, 100, 100, 90, 100, 110};
         for (int i = 0; i < modeloTabla.getColumnCount(); i++) {
             mn.tb_main.getColumnModel().getColumn(i).setPreferredWidth(ancho[i]);
             mn.tb_main.getColumnModel().getColumn(i).setCellRenderer(renderer);
@@ -427,8 +432,8 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
         try {
             Connection con = conexion.establecerConnection();
             String sql = "SELECT re.fecha, ex.edad, ex.CantHembras, ex.CanMachos, "
-                    + "mo.diaHembra, mo.selHembra, ventasHembras, mo.diaMachos, mo.selMachos, mo.ventasMachos, ali.kgHembras, ali.kgMachos, pro.totalHuevos, "
-                    + "pro.incubable, pro.roto "
+                    + "mo.diaHembra, mo.selHembra, ventasHembras, mo.diaMachos, mo.selMachos, mo.ventasMachos, ali.kgHembras, ali.kgMachos, "
+                    + "pro.incubable, pro.roto, pro.totalHuevos "
                     + "FROM registros re "
                     + "INNER JOIN  existencia ex on re.id_registro = ex.id_registro "
                     + "INNER JOIN mortalidad mo on re.id_registro = mo.id_registro "
@@ -1358,6 +1363,19 @@ public class ControladorMain implements ActionListener, MouseListener, KeyListen
                 con.close();
         } catch (Exception e) {
             System.out.println("ERROR EN actualizarVista ");
+        }
+    }
+    
+    public boolean ValidarVacios(){
+        if(mn.txtEdad.getText().isEmpty() ||mn.txt_cantHembras.getText().isEmpty() ||  mn.txt_canMachos.getText().isEmpty() || 
+           mn.txt_INC.getText().isEmpty() || mn.txt_diaMacho.getText().isEmpty() || mn.txt_diaHembra.getText().isEmpty() || 
+           mn.txt_kgHembra.getText().isEmpty() || mn.txt_kgMacho.getText().isEmpty() || mn.txt_comercio.getText().isEmpty() || 
+           mn.txt_fecha.getText().isEmpty() || mn.txt_selHembra.getText().isEmpty() || mn.txt_selMacho.getText().isEmpty() || 
+           mn.txt_ventasMachos.getText().isEmpty() || mn.txt_vetntasHembra.getText().isEmpty()){
+            JOptionPane.showMessageDialog(mn, "No se aceptan campos vacios. Verifique.", "Campos Vacios",JOptionPane.ERROR_MESSAGE);
+            return true;
+        }else{
+            return false;
         }
     }
 }
